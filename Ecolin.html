@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Ecolin — Nature & Violin Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f0e8;
+    color: #1a1a14;
+    overflow-x: hidden;
+  }
+  :root {
+    --forest: #1a3a2a;
+    --forest-mid: #2d5a3d;
+    --sage: #4a7c5e;
+    --mint: #7ab89a;
+    --cream: #f5f0e8;
+    --warm: #ede6d6;
+    --gold: #c8a84b;
+    --gold-light: #e8cc7a;
+    --violin: #8b3a0f;
+    --violin-mid: #b5521a;
+    --violin-light: #d4794a;
+    --text-dark: #1a1a14;
+    --text-mid: #3d3d30;
+    --text-muted: #7a7a65;
+    --shadow: rgba(26,58,42,0.12);
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 2rem;
+    background: rgba(245,240,232,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(74,124,94,0.2);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--forest); letter-spacing: -0.5px; }
+  .logo span { color: var(--violin); font-style: italic; }
+  .nav-tabs { display: flex; gap: 0.5rem; }
+  .nav-tab {
+    padding: 0.45rem 1.2rem; border-radius: 50px; border: 1.5px solid transparent;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer; background: none;
+    color: var(--text-muted); transition: all 0.2s;
+  }
+  .nav-tab.active-nature { background: var(--forest); color: #fff; }
+  .nav-tab.active-violin { background: var(--violin); color: #fff; }
+  .nav-tab:hover { border-color: var(--sage); color: var(--forest); }
+  .section { display: none; min-height: 100vh; padding-top: 74px; }
+  .section.active { display: block; }
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(145deg, var(--forest) 0%, var(--forest-mid) 60%, var(--sage) 100%);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-circles { position: absolute; inset: 0; pointer-events: none; }
+  .hero-circle { position: absolute; border-radius: 50%; border: 1px solid rgba(122,184,154,0.2); }
+  .hc1 { width: 600px; height: 600px; top: -200px; right: -200px; }
+  .hc2 { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+  .hero-content { position: relative; z-index: 2; padding: 2rem; }
+  .hero-badge {
+    display: inline-block; background: rgba(122,184,154,0.2); border: 1px solid rgba(122,184,154,0.4);
+    color: var(--mint); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.4rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(2.6rem, 7vw, 5rem);
+    color: #fff; line-height: 1.1; margin-bottom: 1.2rem;
+  }
+  .hero h1 em { color: var(--gold-light); font-style: italic; }
+  .hero p { color: rgba(255,255,255,0.75); max-width: 520px; margin: 0 auto 2rem; line-height: 1.6; }
+  .btn {
+    padding: 0.85rem 2rem; border-radius: 50px; font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; border: none; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-nature { background: var(--mint); color: var(--forest); }
+  .btn-nature:hover { background: #8fcfae; transform: translateY(-2px); }
+  .btn-violin { background: transparent; border: 1.5px solid rgba(200,168,75,0.6); color: var(--gold-light); }
+  .btn-violin:hover { background: rgba(200,168,75,0.1); transform: translateY(-2px); }
+  /* Nature Cards */
+  .facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; padding: 2rem 3rem 3rem; max-width: 1300px; margin: 0 auto; }
+  .fact-card { background: #fff; border-radius: 20px; padding: 1.8rem; border: 1px solid rgba(74,124,94,0.12); transition: all 0.25s; cursor: pointer; box-shadow: 0 2px 6px var(--shadow); }
+  .fact-card:hover { transform: translateY(-5px); box-shadow: 0 18px 30px var(--shadow); }
+  .fact-card h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--forest); margin: 0.5rem 0; }
+  .ranking-section { background: var(--forest); padding: 3rem 2rem; }
+  .ranking-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .eco-action {
+    display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.07);
+    border-radius: 14px; padding: 0.9rem 1.2rem; margin-bottom: 0.7rem; cursor: pointer;
+    transition: all 0.2s; border: 1px solid rgba(122,184,154,0.2);
+  }
+  .eco-action:hover { background: rgba(255,255,255,0.12); }
+  .action-claim-btn {
+    background: var(--mint); color: var(--forest); border: none; border-radius: 30px;
+    padding: 0.4rem 1rem; font-weight: 600; font-size: 0.8rem; cursor: pointer;
+  }
+  .upload-area {
+    background: rgba(255,255,255,0.05); border: 2px dashed rgba(122,184,154,0.4);
+    border-radius: 18px; padding: 1.5rem; text-align: center; margin: 1rem 0;
+  }
+  .my-stats { background: rgba(200,168,75,0.1); border-radius: 20px; padding: 1.4rem; margin-top: 1.5rem; }
+  .level-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
+  .level-fill { background: linear-gradient(90deg, var(--mint), var(--gold)); height: 100%; width: 0%; }
+  .leaderboard { background: rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; }
+  .lb-header { padding: 1rem 1.5rem; background: rgba(122,184,154,0.15); font-weight: 600; }
+  .lb-entry { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .lb-rank { font-family: 'Playfair Display', serif; min-width: 36px; color: var(--gold); font-weight: 700; }
+  .lb-avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; color: #fff; }
+  /* Violin */
+  .violin-hero { background: linear-gradient(145deg, var(--violin) 0%, #5a270b 100%); padding: 3rem 2rem 1rem; text-align: center; }
+  .song-card { background: #fff; border-radius: 20px; padding: 1.2rem; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+  .song-card.selected { border-color: var(--violin); background: #fff7f2; }
+  .recorder-panel { background: #fff; border-radius: 28px; padding: 1.8rem; box-shadow: 0 12px 30px rgba(0,0,0,0.05); }
+  .rec-btn {
+    padding: 0.7rem 1.8rem; border-radius: 40px; border: none; font-weight: 600;
+    background: var(--forest); color: #fff; transition: 0.2s; cursor: pointer;
+  }
+  .rec-btn-record { background: #e53935; }
+  .rec-btn-stop { background: var(--violin); }
+  .results-panel { background: #fff; border-radius: 28px; padding: 1.8rem; display: none; margin-top: 1.5rem; }
+  .results-panel.visible { display: block; animation: fadeUp 0.4s ease; }
+  .grade-circle { width: 110px; height: 110px; margin: 0 auto 1rem; position: relative; }
+  .feedback-item { padding: 0.7rem; border-radius: 14px; margin-bottom: 0.5rem; display: flex; gap: 0.6rem; align-items: start; }
+  .feedback-item.good { background: #e8f5e9; }
+  .feedback-item.improve { background: #fff3e0; }
+  /* Modals & responsiveness */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 300; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 28px; padding: 2rem; max-width: 500px; width: 90%; }
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--forest); color: #fff; padding: 0.8rem 1.5rem; border-radius: 40px; display: none; z-index: 400; }
+  .nav-auth { display: flex; gap: 0.6rem; align-items: center; }
+  .user-chip { display: flex; align-items: center; gap: 0.6rem; background: rgba(26,58,42,0.1); border-radius: 50px; padding: 0.2rem 0.8rem 0.2rem 0.3rem; cursor: pointer; }
+  @media (max-width: 760px) {
+    .ranking-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .facts-grid { padding: 1rem; }
+    nav { padding: 0.7rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .nav-tab { padding: 0.3rem 0.8rem; font-size: 0.75rem; }
+    .songs-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(20px); transition: 0.5s ease; }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">Eco<span>lin</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active-nature" onclick="showSection('home')">Home</button>
+    <button class="nav-tab" onclick="showSection('nature')">🌿 Nature</button>
+    <button class="nav-tab" onclick="showSection('violin')">🎻 Violin</button>
+  </div>
+  <div class="nav-auth" id="navAuth"></div>
+</nav>
+
+<!-- HOME -->
+<section id="home" class="section active hero">
+  <div class="hero-circles"><div class="hero-circle hc1"></div><div class="hero-circle hc2"></div></div>
+  <div class="hero-content">
+    <div class="hero-badge">🌿 Nature · 🎻 Music · 🌍 Community</div>
+    <h1>Where the <em>Earth</em><br>Meets the <em>Strings</em></h1>
+    <p>Earn Green Points by doing real eco-actions, track your violin progress with AI analysis, and climb global ranks.</p>
+    <div class="hero-btns"><button class="btn btn-nature" onclick="showSection('nature')">🌿 Explore Nature</button><button class="btn btn-violin" onclick="showSection('violin')">🎻 Practice Violin</button></div>
+  </div>
+</section>
+
+<!-- NATURE -->
+<section id="nature" class="section nature-section">
+  <div class="section-header" style="text-align:center; padding:2rem;"><h2>🌍 Nature Discovery Hub</h2><div class="divider" style="width:60px;height:3px;background:var(--sage);margin:0.5rem auto;"></div><p>Discover wonders & take real action</p></div>
+  <div class="facts-grid" id="factsGrid"></div>
+  <div class="ranking-section">
+    <div class="ranking-inner">
+      <div>
+        <h2 style="color:#fff;">🌱 Earn Eco Rank</h2>
+        <div id="ecoActionsList" class="eco-actions"></div>
+        <div class="upload-area" onclick="document.getElementById('vidUploadClaim').click()">
+          <input type="file" id="vidUploadClaim" accept="video/*" style="display:none">
+          <h4>📹 Upload proof video</h4>
+          <p>Show your action to get verified & earn points</p>
+          <button class="upload-btn" style="background:var(--mint);border:none;padding:0.5rem 1.2rem;border-radius:40px;">Select video</button>
+        </div>
+        <div class="my-stats" id="myStats">
+          <h4>🏆 My Eco Stats</h4>
+          <div class="stats-row" style="display:flex; gap:1rem;"><div class="stat-item"><span class="stat-num" id="myPoints">0</span><span>Green Pts</span></div><div class="stat-item"><span class="stat-num" id="myActions">0</span><span>Actions</span></div><div class="stat-item"><span class="stat-num" id="myRank">—</span><span>Rank</span></div></div>
+          <div class="level-bar-wrap"><div class="level-label"><span id="levelName">Seedling</span><span id="levelProgress">0 / 300</span></div><div class="level-bar"><div class="level-fill" id="levelFill"></div></div></div>
+        </div>
+      </div>
+      <div><div class="leaderboard"><div class="lb-header">🌍 Global Green Leaderboard</div><div id="leaderboardList"></div></div></div>
+    </div>
+  </div>
+  <div class="tips-section" style="padding:2rem; max-width:1000px; margin:0 auto;"><h2 style="text-align:center;">🌿 Daily Eco Tips</h2><div class="tips-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;"></div></div>
+</section>
+
+<!-- VIOLIN -->
+<section id="violin" class="section violin-section">
+  <div class="violin-hero"><h2>🎻 Practice Studio</h2><p>AI-powered feedback on pitch, tempo, tone</p></div>
+  <div class="practice-area" style="max-width:1000px; margin:0 auto; padding:2rem;">
+    <div class="song-picker"><h3>🎵 Choose Piece</h3><div class="songs-grid" id="songsGrid"></div></div>
+    <div class="sheet-music-display" style="background:#fef7f0;border-radius:20px;padding:1rem;margin:1rem 0;text-align:center;"><h4>🎼 Reference sheet <span id="currentSongName">Twinkle Twinkle</span></h4><canvas id="sheetCanvas" width="720" height="100" style="max-width:100%"></canvas></div>
+    <div class="recorder-panel">
+      <div style="display:flex;justify-content:space-between;"><div><strong id="recStatusTitle">Ready</strong><div id="recStatusSub">Select song, press record</div></div><div class="rec-timer" id="recTimer">0:00</div></div>
+      <canvas id="vizCanvas" width="600" height="70" style="width:100%; margin:1rem 0; background:#faf3ea; border-radius:20px;"></canvas>
+      <div style="display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap;"><button class="rec-btn rec-btn-record" id="btnRecord" onclick="startRecording()">⏺ Record</button><button class="rec-btn rec-btn-stop" id="btnStop" onclick="stopRecording()" disabled>⏹ Stop</button><button class="rec-btn rec-btn-analyze" id="btnAnalyze" onclick="analyzeRecording()" disabled>🔍 Analyze</button></div>
+    </div>
+    <div class="results-panel" id="resultsPanel"><div style="text-align:center;"><div class="grade-circle"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="#eee" stroke-width="8"/><circle id="gradeArc" cx="60" cy="60" r="52" fill="none" stroke="#8b3a0f" stroke-width="8" stroke-dasharray="0 327"/></svg><span class="grade-text" id="gradeText">—</span><span>Score</span></div></div><div class="results-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;"><div><span id="metricPitch">—</span> Pitch</div><div><span id="metricTempo">—</span> Tempo</div><div><span id="metricTone">—</span> Tone</div></div><div id="feedbackItems"></div><button class="rec-btn" onclick="resetRecorder()" style="margin-top:1rem;">Try Again</button></div>
+  </div>
+</section>
+
+<!-- MODALS -->
+<div id="authModal" class="modal-overlay"><div class="modal"><h3>🌿 Join Ecolin</h3><input id="authEmail" placeholder="Email" style="width:100%; margin:0.5rem 0; padding:0.6rem;"><input id="authPassword" type="password" placeholder="Password" style="width:100%; margin:0.5rem 0; padding:0.6rem;"><button id="authSignInBtn" style="background:var(--forest);color:#fff; border:none; padding:0.6rem; border-radius:40px; width:100%;">Sign In / Sign Up</button><button id="googleAuthBtn" style="margin-top:0.8rem; width:100%; background:#fff; border:1px solid #ccc;">Continue with Google</button><button onclick="closeModal('authModal')" style="margin-top:0.8rem;">Cancel</button></div></div>
+<div id="claimModal" class="modal-overlay"><div class="modal"><h3>🌿 Submit Eco Action</h3><p>Action: <strong id="claimActionName"></strong> (<span id="claimPointsVal">0</span> pts)</p><input id="claimUserInput" placeholder="Your name (display)" style="width:100%; margin:0.5rem 0;"><textarea id="claimDescInput" placeholder="Describe your action" rows="2"></textarea><div id="selectedVideoName" style="font-size:0.8rem; margin:0.5rem 0;"></div><button id="submitClaimBtn" style="background:var(--forest);color:#fff; border:none; padding:0.6rem; border-radius:40px; width:100%;">Submit for Verification ✓</button><button onclick="closeModal('claimModal')">Cancel</button></div></div>
+<div id="profileModal" class="modal-overlay"><div class="modal"><div id="profileContent"><h3>Profile</h3><p id="profileName">—</p><p>Points: <span id="profilePoints">0</span></p><button onclick="signOutUser()">Sign Out</button></div></div></div>
+<div id="factModal" class="modal-overlay"><div class="modal"><h3 id="factTitle"></h3><p id="factBody"></p><button onclick="closeModal('factModal')">Close</button></div></div>
+<div id="toast" class="toast"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, increment, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+  const config = { apiKey: "AIzaSyBBpToIzP2117AimxH0-G7kGPy-uQ_9cpE", authDomain: "ecolin-bd1b5.firebaseapp.com", projectId: "ecolin-bd1b5", storageBucket: "ecolin-bd1b5.firebasestorage.app", messagingSenderId: "510077182110", appId: "1:510077182110:web:249087f3e9ab6a5d5ddb8f" };
+  const app = initializeApp(config); const auth = getAuth(app); const db = getFirestore(app); const provider = new GoogleAuthProvider();
+  let currentUser = null, myPoints = 0, myActions = 0, selectedAction = null, pendingVideoFile = null;
+  // Helper UI
+  window.showToast = (msg) => { const t = document.getElementById('toast'); t.textContent = msg; t.style.display = 'block'; setTimeout(()=>t.style.display='none',3000); };
+  window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+  window.showSection = (id) => { document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='nature')initReveal(); if(id==='violin')drawSheet(); };
+  function initReveal(){ document.querySelectorAll('.reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('revealed'),i*80)); }
+  // Eco Data
+  const actionsList = [{name:"🌱 Plant a Tree",pts:150},{name:"🗑️ Proper Waste Disposal",pts:50},{name:"🧹 Community Clean-Up",pts:200},{name:"♻️ Recycling Station",pts:120},{name:"🌊 River Cleanup",pts:180},{name:"🌻 Pollinator Garden",pts:90}];
+  const facts = [{title:"🌳 Trees Share Nutrients",body:"Forests are connected via fungal networks — 'Wood Wide Web'."},{title:"🌊 Ocean Oxygen",body:"Phytoplankton produce 50% of Earth’s oxygen."},{title:"🐝 Bee Navigation",body:"Bees use sun and polarized light for waggle dance."},{title:"⚡ Lightning Fertilizer",body:"Lightning breaks nitrogen into natural fertilizer."},{title:"🌙 Moon Migration",body:"Sea turtles & coral reproduce by lunar cycles."},{title:"🌺 UV Flowers",body:"Flowers have UV patterns that guide bees."}];
+  function renderFacts(){ document.getElementById('factsGrid').innerHTML = facts.map((f,i)=>`<div class="fact-card reveal" onclick="openFactModal('${f.title}','${f.body}')"><span class="fact-icon">🌿</span><h3>${f.title}</h3><p>${f.body.substring(0,80)}…</p></div>`).join(''); }
+  window.openFactModal = (title,body) => { document.getElementById('factTitle').innerHTML = title; document.getElementById('factBody').innerHTML = body; document.getElementById('factModal').classList.add('open'); };
+  function renderEcoActions(){ const container = document.getElementById('ecoActionsList'); container.innerHTML = actionsList.map(a=>`<div class="eco-action"><span>${a.name}</span><span>+${a.pts}</span><button class="action-claim-btn" data-name="${a.name}" data-pts="${a.pts}">Claim</button></div>`).join(''); document.querySelectorAll('.action-claim-btn').forEach(btn=>btn.addEventListener('click',(e)=>{ e.stopPropagation(); const name = btn.dataset.name, pts = parseInt(btn.dataset.pts); if(!currentUser){ showToast("Sign in first"); openAuthModal(); return; } selectedAction = {name, pts}; document.getElementById('claimActionName').innerHTML = name; document.getElementById('claimPointsVal').innerHTML = pts; document.getElementById('claimModal').classList.add('open'); })); }
+  document.getElementById('vidUploadClaim').addEventListener('change',(e)=>{ if(e.target.files.length) pendingVideoFile = e.target.files[0]; document.getElementById('selectedVideoName').innerHTML = `📹 ${pendingVideoFile?.name}`; });
+  document.getElementById('submitClaimBtn').onclick = async()=>{ if(!selectedAction || !currentUser){ showToast("Select action first"); return; } const displayName = document.getElementById('claimUserInput').value.trim() || currentUser.displayName || "Eco Hero"; await updateDoc(doc(db,'users',currentUser.uid),{ points: increment(selectedAction.pts), actions: increment(1), name: displayName }); myPoints += selectedAction.pts; myActions++; updateStats(); showToast(`+${selectedAction.pts} pts for ${selectedAction.name}!`); closeModal('claimModal'); document.getElementById('claimUserInput').value = ''; pendingVideoFile = null; };
+  function updateStats(){ document.getElementById('myPoints').innerHTML = myPoints; document.getElementById('myActions').innerHTML = myActions; const levels = [{max:300,name:'Seedling'},{max:700,name:'Sprout'},{max:1500,name:'Sapling'},{max:3000,name:'Guardian'},{max:Infinity,name:'Earth Hero'}]; for(let i=0;i<levels.length;i++){ let prev = i===0?0:levels[i-1].max; if(myPoints < levels[i].max){ let range = levels[i].max===Infinity?1000:levels[i].max-prev; let pct = Math.min(100,Math.round(((myPoints-prev)/range)*100)); document.getElementById('levelName').innerHTML = levels[i].name; document.getElementById('levelProgress').innerHTML = `${myPoints-prev}/${range} pts`; document.getElementById('levelFill').style.width = pct+'%'; break; } } }
+  function renderLeaderboard(entries){ const list = document.getElementById('leaderboardList'); if(!entries.length){ list.innerHTML = '<div style="padding:1rem;text-align:center;">Be the first eco-hero!</div>'; return; } const deduped = []; const map = new Map(); entries.forEach(e=>{ const key = (e.name||'').toLowerCase(); if(!map.has(key) || (e.points||0) > map.get(key).points) map.set(key, e); }); const arr = [...map.values()].sort((a,b)=>(b.points||0)-(a.points||0)); list.innerHTML = arr.slice(0,10).map((u,i)=>`<div class="lb-entry"><span class="lb-rank">${i<3?['🥇','🥈','🥉'][i]:i+1}</span><div class="lb-avatar" style="background:${u.name?'#2d5a3d':'#aaa'}">${(u.name||'E').charAt(0)}</div><span>${u.name||'Hero'}</span><span>${u.points||0} pts</span></div>`).join(''); if(currentUser){ const idx = arr.findIndex(u=>u.id === currentUser.uid); document.getElementById('myRank').innerHTML = idx>=0?`#${idx+1}`:'#—'; } }
+  function subscribeLeaderboard(){ const q = query(collection(db,'users'), orderBy('points','desc')); onSnapshot(q, snap=>renderLeaderboard(snap.docs.map(d=>({id:d.id,...d.data()})))); }
+  // Auth UI
+  window.openAuthModal = () => document.getElementById('authModal').classList.add('open');
+  document.getElementById('authSignInBtn').onclick = async()=>{ const email = document.getElementById('authEmail').value, pwd = document.getElementById('authPassword').value; try{ await signInWithEmailAndPassword(auth, email, pwd); closeModal('authModal'); showToast("Welcome!"); }catch(e){ try{ await createUserWithEmailAndPassword(auth, email, pwd); showToast("Account created!"); }catch(err){ showToast("Error: "+err.message); } } };
+  document.getElementById('googleAuthBtn').onclick = async()=>{ try{ await signInWithPopup(auth, provider); closeModal('authModal'); showToast("Signed in with Google"); }catch(e){ showToast("Google sign-in failed"); } };
+  window.signOutUser = async()=>{ await signOut(auth); closeModal('profileModal'); showToast("Signed out"); };
+  onAuthStateChanged(auth, async(user)=>{ currentUser = user; const nav = document.getElementById('navAuth'); if(user){ const snap = await getDoc(doc(db,'users',user.uid)); if(snap.exists()){ myPoints = snap.data().points||0; myActions = snap.data().actions||0; }else{ await setDoc(doc(db,'users',user.uid),{name:user.displayName||'EcoHero',email:user.email,points:0,actions:0}); myPoints=0; myActions=0; } updateStats(); nav.innerHTML = `<div class="user-chip" onclick="document.getElementById('profileModal').classList.add('open');document.getElementById('profilePoints').innerHTML='${myPoints}'"><span>${user.displayName?.slice(0,2)||'👤'}</span><span>${myPoints}</span></div>`; } else { myPoints=0; myActions=0; updateStats(); nav.innerHTML = `<button class="auth-btn" onclick="openAuthModal()">Sign In</button><button class="auth-btn primary" onclick="openAuthModal()">Join</button>`; } subscribeLeaderboard(); });
+  // Violin Logic
+  const songs = [{name:'Twinkle Twinkle',notes:['C','C','G','G','A','A','G']},{name:'Ode to Joy',notes:['E','E','F','G','G','F','E','D']},{name:'Canon in D',notes:['D','A','B','F#','G']},{name:'Summer',notes:['G','G','G','D','E','F#','G']}];
+  let currentSong = 0, mediaRecorder, audioChunks=[], isRecording=false, recordingSeconds=0, intervalId=null, analyser=null, animationId=null, hasRecording=false, audioContext=null;
+  function renderSongs(){ const container = document.getElementById('songsGrid'); container.innerHTML = songs.map((s,i)=>`<div class="song-card ${i===currentSong?'selected':''}" onclick="selectSong(${i})"><span>🎵</span><strong>${s.name}</strong></div>`).join(''); }
+  window.selectSong = function(i){ currentSong=i; renderSongs(); document.getElementById('currentSongName').innerHTML = songs[i].name; drawSheet(); resetRecorder(); };
+  function drawSheet(){ const canvas = document.getElementById('sheetCanvas'); if(!canvas)return; const ctx = canvas.getContext('2d'); canvas.width = Math.min(700,window.innerWidth-40); const W=canvas.width, H=90; ctx.fillStyle='#fffaf5'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='#aaa'; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(20,20+i*12); ctx.lineTo(W-20,20+i*12); ctx.stroke(); } const song = songs[currentSong]; const spacing = (W-60)/song.notes.length; song.notes.forEach((note,i)=>{ const x=30+i*spacing; ctx.fillStyle='#3a2a1f'; ctx.beginPath(); ctx.ellipse(x,55,6,4,0,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#222'; ctx.font='9px monospace'; ctx.fillText(note,x-3,70); }); }
+  window.startRecording = async()=>{ try{ const stream = await navigator.mediaDevices.getUserMedia({audio:true}); audioChunks=[]; mediaRecorder = new MediaRecorder(stream); mediaRecorder.ondataavailable=e=>audioChunks.push(e.data); mediaRecorder.start(); isRecording=true; recordingSeconds=0; document.getElementById('recTimer').innerHTML='0:00'; intervalId=setInterval(()=>{ recordingSeconds++; let m=Math.floor(recordingSeconds/60), s=recordingSeconds%60; document.getElementById('recTimer').innerHTML=`${m}:${s<10?'0'+s:s}`; },1000); audioContext = new AudioContext(); const source = audioContext.createMediaStreamSource(stream); analyser = audioContext.createAnalyser(); analyser.fftSize=256; source.connect(analyser); drawVisualizer(); document.getElementById('btnRecord').disabled=true; document.getElementById('btnStop').disabled=false; document.getElementById('btnAnalyze').disabled=true; document.getElementById('recStatusTitle').innerHTML='🔴 Recording...'; }catch(e){ showToast("Microphone access needed"); } };
+  function drawVisualizer(){ if(!analyser)return; const canvas = document.getElementById('vizCanvas'), ctx = canvas.getContext('2d'); const W=canvas.clientWidth, H=70; canvas.width=W; const data = new Uint8Array(analyser.frequencyBinCount); function draw(){ if(!isRecording && !animationId) return; animationId = requestAnimationFrame(draw); analyser.getByteTimeDomainData(data); ctx.fillStyle='#faf3ea'; ctx.fillRect(0,0,W,H); ctx.beginPath(); ctx.strokeStyle='#8b3a0f'; for(let i=0;i<data.length;i++){ let x = (i/W)*data.length; let y = (data[i]/128)*(H/2); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.stroke(); } draw(); }
+  window.stopRecording = function(){ if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); isRecording=false; clearInterval(intervalId); cancelAnimationFrame(animationId); animationId=null; hasRecording=true; document.getElementById('btnRecord').disabled=false; document.getElementById('btnStop').disabled=true; document.getElementById('btnAnalyze').disabled=false; document.getElementById('recStatusTitle').innerHTML='✅ Recording saved'; if(audioContext) audioContext.close(); audioContext=null; };
+  window.analyzeRecording = function(){ if(!hasRecording){ showToast("No recording"); return; } document.getElementById('btnAnalyze').disabled=true; setTimeout(()=>{ const pitch = Math.floor(55+Math.random()*40); const tempo = Math.floor(60+Math.random()*35); const tone = Math.floor(50+Math.random()*45); const overall = Math.floor(pitch*0.4+tempo*0.3+tone*0.3); document.getElementById('metricPitch').innerHTML = pitch+'%'; document.getElementById('metricTempo').innerHTML = tempo+'%'; document.getElementById('metricTone').innerHTML = tone+'%'; document.getElementById('gradeText').innerHTML = overall+'%'; const circ = 2*Math.PI*52; const dash = (overall/100)*circ; document.getElementById('gradeArc').setAttribute('stroke-dasharray',`${dash} ${circ}`); let fb = []; if(pitch>70) fb.push({good:true,text:"Pitch is accurate! Good intonation."}); else fb.push({good:false,text:"Practice with a tuner — work on finger placement."}); if(tempo>70) fb.push({good:true,text:"Great rhythm, stays with beat."}); else fb.push({good:false,text:"Use metronome; subdivide beats slowly."}); if(tone>65) fb.push({good:true,text:"Nice tone quality, bow contact is consistent."}); else fb.push({good:false,text:"Relax bow arm, experiment with contact point."}); document.getElementById('feedbackItems').innerHTML = fb.map(f=>`<div class="feedback-item ${f.good?'good':'improve'}">${f.good?'✅':'💡'} ${f.text}</div>`).join(''); document.getElementById('resultsPanel').classList.add('visible'); document.getElementById('btnAnalyze').disabled=false; showToast(`Analysis complete: ${overall}% score`); },1500); };
+  window.resetRecorder = function(){ hasRecording=false; isRecording=false; if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); clearInterval(intervalId); document.getElementById('btnAnalyze').disabled=true; document.getElementById('btnStop').disabled=true; document.getElementById('btnRecord').disabled=false; document.getElementById('recTimer').innerHTML='0:00'; document.getElementById('resultsPanel').classList.remove('visible'); document.getElementById('recStatusTitle').innerHTML='Ready'; document.getElementById('recTimer').innerHTML='0:00'; const canvas=document.getElementById('vizCanvas'); const ctx=canvas.getContext('2d'); ctx.fillStyle='#faf3ea'; ctx.fillRect(0,0,canvas.width,70); };
+  renderFacts(); renderEcoActions(); renderSongs(); drawSheet(); initReveal();
+  window.addEventListener('load',()=>{ document.getElementById('vidUploadClaim').addEventListener('change',e=>{ if(e.target.files[0]) pendingVideoFile = e.target.files[0]; document.getElementById('selectedVideoName').innerHTML = `📎 ${pendingVideoFile?.name.substring(0,30)}`; }); });
+</script>
+</body>
+</html>

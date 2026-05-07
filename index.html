@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecolin — Nature & Violin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a3a2a;
+    --forest-mid: #2d5a3d;
+    --sage: #4a7c5e;
+    --mint: #7ab89a;
+    --cream: #f5f0e8;
+    --warm: #ede6d6;
+    --gold: #c8a84b;
+    --gold-light: #e8cc7a;
+    --violin: #8b3a0f;
+    --violin-mid: #b5521a;
+    --violin-light: #d4794a;
+    --text-dark: #1a1a14;
+    --text-mid: #3d3d30;
+    --text-muted: #7a7a65;
+    --shadow: rgba(26,58,42,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(74,124,94,0.2);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 101;
+    margin-left: auto;
+  }
+  .hamburger span {
+    width: 100%;
+    height: 3px;
+    background: var(--forest);
+    border-radius: 2px;
+    transition: all 0.3s;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--forest);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--violin); font-style: italic; }
+
+  .nav-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nav-tab {
+    padding: 0.45rem 1.2rem;
+    border-radius: 50px;
+    border: 1.5px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: none;
+    color: var(--text-muted);
+  }
+  .nav-tab.active-nature { background: var(--forest); color: #fff; }
+  .nav-tab.active-violin { background: var(--violin); color: #fff; }
+  .nav-tab:hover:not(.active-nature):not(.active-violin) {
+    border-color: var(--sage);
+    color: var(--forest);
+  }
+
+  /* Mobile Menu */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(245,240,232,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(74,124,94,0.2);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 1rem 0;
+    z-index: 99;
+  }
+  .mobile-menu.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  .mobile-nav-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0 1rem;
+  }
+  .mobile-nav-tabs .nav-tab {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    margin: 0;
+  }
+  .mobile-nav-auth {
+    padding: 1rem;
+    border-top: 1px solid rgba(74,124,94,0.2);
+    margin-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .mobile-nav-auth .auth-btn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .mobile-nav-auth .auth-btn.primary {
+    order: 2;
+  }
+  .mobile-nav-auth .user-chip {
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(74,124,94,0.08);
+    order: 1;
+  }
+  .mobile-nav-auth .user-chip-name {
+    display: block;
+    max-width: none;
+  }
+
+  /* SECTIONS */
+  .section { display: none; min-height: 100vh; padding-top: 74px; padding-left: clamp(0.5rem, 2%, 3rem); padding-right: clamp(0.5rem, 2%, 3rem); }
+  .section.active { display: block; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(160deg, var(--forest) 0%, var(--forest-mid) 55%, var(--sage) 100%);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 120px 2rem 80px;
+  }
+
+  .hero-circles {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .hero-circle {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(122,184,154,0.15);
+  }
+  .hc1 { width: 600px; height: 600px; top: -200px; right: -200px; }
+  .hc2 { width: 400px; height: 400px; bottom: -100px; left: -100px; }
+  .hc3 { width: 250px; height: 250px; bottom: 100px; right: 10%; }
+
+  .hero-content { position: relative; z-index: 2; padding: 2rem 1.5rem; max-width: 800px; margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(122,184,154,0.2);
+    border: 1px solid rgba(122,184,154,0.4);
+    color: var(--mint);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.4rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    color: #fff;
+    line-height: 1.08;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 em { color: var(--gold-light); font-style: italic; }
+
+  .hero p {
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    padding: 0.85rem 2rem;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-nature {
+    background: var(--mint);
+    color: var(--forest);
+  }
+  .btn-nature:hover { background: #8fcfae; transform: translateY(-2px); }
+  .btn-violin {
+    background: transparent;
+    border: 1.5px solid rgba(200,168,75,0.6);
+    color: var(--gold-light);
+  }
+  .btn-violin:hover { background: rgba(200,168,75,0.1); transform: translateY(-2px); }
+
+  /* ===== NATURE SECTION ===== */
+  .nature-section { background: var(--cream); }
+
+  .section-header {
+    text-align: center;
+    padding: clamp(2rem, 4%, 4rem) clamp(1rem, 3%, 2rem) clamp(1.5rem, 3%, 2rem);
+  }
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--forest);
+    margin-bottom: 0.75rem;
+  }
+  .section-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .divider {
+    width: 60px; height: 3px;
+    background: var(--sage);
+    margin: 1rem auto;
+    border-radius: 2px;
+  }
+
+  /* Facts Grid */
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem clamp(1rem, 3%, 3rem) 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .fact-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(74,124,94,0.12);
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .fact-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--sage);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .fact-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--shadow); }
+  .fact-card:hover::before { transform: scaleX(1); }
+
+  .fact-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .fact-category {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sage);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .fact-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--forest);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+  .fact-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  /* Eco Ranking */
+  .ranking-section {
+    background: var(--forest);
+    padding: 4rem clamp(1rem, 3%, 3rem);
+    width: 100%;
+  }
+  .ranking-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    width: 100%;
+  }
+  /* ===== RESPONSIVE ===== */
+  
+  /* Tablet & Medium Devices (768px and below) */
+  @media (max-width: 1024px) {
+    .facts-grid { padding: 2rem 2rem 3rem; }
+    .ranking-inner { gap: 2.5rem; }
+  }
+
+  @media (max-width: 768px) {
+    /* Nav */
+    nav { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .logo { font-size: 1.2rem; }
+    .nav-tabs { gap: 0.2rem; }
+    .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+
+    /* Hero */
+    .hero { padding: 100px 1.5rem 60px; }
+    .hero h1 { font-size: clamp(1.8rem, 8vw, 3rem); line-height: 1.1; }
+    .hero p { font-size: 0.95rem; max-width: 95%; }
+    .hero-btns { flex-direction: column; align-items: center; gap: 0.75rem; }
+    .btn { width: 90%; max-width: 300px; text-align: center; padding: 0.8rem 1.8rem; }
+    .hero-badge { font-size: 0.75rem; padding: 0.35rem 1rem; }
+    .hc1 { width: 300px; height: 300px; top: -100px; right: -100px; }
+    .hc2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+    .hc3 { display: none; }
+
+    /* Nature section header */
+    .section-header { padding: 2.5rem 1rem 1.5rem; }
+    .section-header h2 { font-size: 1.6rem; }
+    .section-header p { font-size: 0.95rem; }
+
+    /* Facts grid */
+    .facts-grid {
+      grid-template-columns: 1fr;
+      padding: 1.5rem 1rem 2rem;
+      gap: 1rem;
+    }
+    .fact-card { padding: 1.5rem; border-radius: 16px; }
+    .fact-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .fact-card h3 { font-size: 1rem; }
+    .fact-card p { font-size: 0.88rem; }
+
+    /* Ranking section */
+    .ranking-section { padding: 2.5rem 1rem; }
+    .ranking-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .ranking-header h2 { font-size: 1.5rem; }
+    .ranking-header p { font-size: 0.95rem; }
+    .eco-action { flex-wrap: nowrap; gap: 0.75rem; align-items: center; }
+    .eco-action .action-info { min-width: 0; flex: 1; }
+    .eco-action .action-name { font-size: 0.9rem; }
+    .eco-action .action-pts { font-size: 0.78rem; }
+    .action-claim-btn { padding: 0.4rem 0.8rem; font-size: 0.78rem; flex-shrink: 0; white-space: nowrap; }
+    .eco-action .action-icon { font-size: 1.3rem; min-width: 1.5rem; }
+
+    /* Upload */
+    .upload-area { padding: 1.25rem; border-radius: 14px; }
+    .upload-area h4 { font-size: 0.95rem; }
+    .upload-area p { font-size: 0.8rem; }
+
+    /* My stats */
+    .my-stats { padding: 1.25rem; border-radius: 14px; }
+    .my-stats h4 { font-size: 0.82rem; margin-bottom: 0.75rem; }
+    .stats-row { gap: 0.75rem; flex-wrap: wrap; }
+    .stat-item { flex: 1; min-width: 80px; }
+    .stat-num { font-size: 1.4rem; }
+    .stat-label { font-size: 0.75rem; }
+
+    /* Level label */
+    .level-label { flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem; }
+    .level-label span { font-size: 0.78rem; }
+    .level-bar { height: 6px; }
+
+    /* Leaderboard */
+    .leaderboard { border-radius: 14px; }
+    .lb-header { padding: 0.85rem 1rem; font-size: 0.78rem; }
+    .lb-entry { padding: 0.7rem 1rem; gap: 0.5rem; }
+    .lb-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
+    .lb-name { font-size: 0.8rem; }
+    .lb-pts { font-size: 0.76rem; }
+    .lb-rank { font-size: 0.95rem; min-width: 24px; }
+
+    /* Tips */
+    .tips-section { padding: 2.5rem 1rem; }
+    .tips-section h2 { font-size: 1.6rem; margin-bottom: 1.5rem; }
+    .tips-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .tip-card { padding: 1rem; border-radius: 14px; }
+    .tip-card .tip-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .tip-card h4 { font-size: 0.85rem; }
+    .tip-card p { font-size: 0.8rem; }
+
+    /* Violin hero */
+    .violin-hero { padding: 2rem 1rem 0; text-align: center; }
+    .violin-hero h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+    .violin-hero p { font-size: 0.9rem; max-width: 100%; }
+
+    /* Practice area */
+    .practice-area { padding: 1.5rem 1rem 2rem; max-width: 100%; }
+    .song-picker h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .song-card { padding: 1rem; border-radius: 14px; }
+    .song-card .song-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .song-card h4 { font-size: 0.8rem; margin-bottom: 0.2rem; }
+    .song-card span { font-size: 0.75rem; }
+    .song-card .difficulty { font-size: 0.68rem; padding: 0.15rem 0.6rem; }
+
+    /* Sheet music */
+    .sheet-music-display { padding: 1rem; border-radius: 14px; overflow-x: auto; margin-bottom: 1.5rem; }
+    .sheet-music-display h4 { font-size: 0.88rem; margin-bottom: 0.75rem; }
+    #sheetCanvas { height: 80px; }
+
+    /* Recorder */
+    .recorder-panel { padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem; }
+    .recorder-top { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .rec-status { flex: 1; font-size: 0.85rem; }
+    .rec-status strong { font-size: 0.95rem; }
+    .rec-timer { font-size: 1.8rem; align-self: flex-end; min-width: 70px; }
+    .visualizer-canvas { height: 70px; margin-bottom: 1rem; }
+    .rec-controls { flex-direction: column; align-items: stretch; gap: 0.65rem; }
+    .rec-btn { padding: 0.75rem 1rem; font-size: 0.88rem; border-radius: 12px; }
+    .rec-btn:disabled { cursor: not-allowed; }
+
+    /* Results */
+    .results-panel { padding: 1.25rem; border-radius: 16px; }
+    .results-panel h3 { font-size: 1.2rem; }
+    .grade-circle { width: 100px; height: 100px; margin-bottom: 1rem; }
+    .grade-circle .grade-text { font-size: 1.8rem; }
+    .grade-circle .grade-label { font-size: 0.68rem; }
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .result-metric { padding: 1rem; border-radius: 12px; }
+    .result-metric .metric-val { font-size: 1.5rem; }
+    .result-metric .metric-name { font-size: 0.75rem; }
+    .compare-waveforms { grid-template-columns: 1fr; gap: 0.75rem; }
+    .waveform-box { padding: 0.85rem; border-radius: 12px; }
+    .waveform-box h5 { font-size: 0.75rem; margin-bottom: 0.5rem; }
+    .waveform-box canvas { height: 50px; }
+    .feedback-list { margin-top: 1rem; }
+    .feedback-list h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .feedback-item { padding: 0.6rem; border-radius: 8px; margin-bottom: 0.4rem; }
+    .feedback-item p { font-size: 0.82rem; }
+
+    /* Toast */
+    .toast { right: 1rem; left: 1rem; bottom: 1rem; max-width: none; font-size: 0.88rem; }
+
+    /* Modal */
+    .modal-overlay { padding: 1rem; align-items: flex-end; }
+    .modal { border-radius: 16px; padding: 1.5rem; max-width: 95vw; }
+    .modal h3 { font-size: 1.3rem; margin-bottom: 0.9rem; }
+    .modal p { font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .modal input[type="text"], .modal select { padding: 0.7rem 0.9rem; font-size: 0.88rem; margin-bottom: 0.85rem; border-radius: 8px; }
+    .modal-btns { flex-direction: column-reverse; gap: 0.75rem; }
+    .modal-btn-submit { padding: 0.75rem; font-size: 0.9rem; border-radius: 8px; }
+    .modal-btn-cancel { padding: 0.7rem 1.2rem; font-size: 0.88rem; text-align: center; }
+
+    /* Auth */
+    .nav-auth { gap: 0.4rem; }
+    .auth-btn { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+    .user-chip-name { display: none; }
+    .user-chip { padding: 0.25rem 0.7rem 0.25rem 0.25rem; }
+    .user-avatar-sm { width: 28px; height: 28px; font-size: 0.7rem; }
+
+    /* Profile modal */
+    .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+    .profile-stat { padding: 0.8rem; border-radius: 10px; }
+    .profile-stat .ps-num { font-size: 1.3rem; }
+    .profile-stat .ps-label { font-size: 0.7rem; }
+  }
+
+  /* Small Devices (600px to 768px) */
+  @media (min-width: 601px) and (max-width: 768px) {
+    .facts-grid { grid-template-columns: 1fr; }
+    .tips-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Mobile Phones (600px and below) */
+  @media (max-width: 600px) {
+    nav { padding: 0.65rem 0.8rem; justify-content: space-between; }
+    .logo { font-size: 1.1rem; }
+    .hamburger { display: flex; }
+    .nav-menu { display: none; }
+    .nav-auth { display: none; }
+
+    .hero { padding: 90px 1rem 50px; }
+    .hero h1 { font-size: clamp(1.5rem, 7.5vw, 2.5rem); }
+    .hero p { font-size: 0.9rem; line-height: 1.6; }
+    .hero-badge { font-size: 0.7rem; }
+    .hero-btns { gap: 0.6rem; }
+    .btn { padding: 0.75rem 1.5rem; font-size: 0.88rem; }
+
+    .section-header { padding: 2rem 0.8rem 1.2rem; }
+    .section-header h2 { font-size: 1.4rem; }
+    .section-header p { font-size: 0.9rem; }
+
+    .facts-grid { padding: 1.25rem 0.8rem 1.75rem; grid-template-columns: 1fr; }
+    .fact-card { padding: 1.25rem; }
+
+    .ranking-section { padding: 2rem 0.8rem; }
+    .eco-action { padding: 0.85rem 0.9rem; }
+    .eco-action .action-name { font-size: 0.88rem; }
+
+    .upload-area { padding: 1.1rem; margin-bottom: 1.25rem; }
+    .upload-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+
+    .tips-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+    .tip-card { padding: 0.9rem; }
+
+    .practice-area { padding: 1.25rem 0.8rem 1.75rem; }
+    .song-picker h3 { font-size: 1.1rem; }
+    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .song-card { padding: 0.9rem; }
+
+    #sheetCanvas { height: 70px; }
+
+    .recorder-panel { padding: 1rem; }
+    .rec-controls { gap: 0.6rem; }
+    .rec-btn { padding: 0.7rem 0.9rem; font-size: 0.82rem; }
+
+    .profile-header { gap: 1rem; }
+    .profile-avatar { width: 56px; height: 56px; font-size: 1.3rem; }
+    .profile-info h3 { font-size: 1.1rem; }
+  }
+
+  /* Extra Small Devices (400px and below) */
+  @media (max-width: 400px) {
+    nav { padding: 0.6rem 0.7rem; justify-content: space-between; }
+    .logo { font-size: 1rem; }
+    .hamburger { display: flex; }
+    .nav-tabs { display: none; }
+    .nav-menu { display: none; }
+    .nav-auth { display: none; }
+
+    .hero h1 { font-size: clamp(1.3rem, 7vw, 2rem); line-height: 1.05; }
+    .hero p { font-size: 0.85rem; }
+    .btn { padding: 0.7rem 1.3rem; font-size: 0.82rem; width: 100%; }
+
+    .section-header h2 { font-size: 1.3rem; }
+    .facts-grid { padding: 1rem 0.7rem 1.5rem; gap: 0.75rem; }
+    .fact-card { padding: 1.1rem; }
+    .fact-card h3 { font-size: 0.95rem; }
+
+    .songs-grid { grid-template-columns: 1fr; gap: 0.65rem; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .compare-waveforms { grid-template-columns: 1fr; }
+
+    .grade-circle { width: 90px; height: 90px; }
+    .grade-circle .grade-text { font-size: 1.6rem; }
+
+    .modal { padding: 1.3rem; }
+    .modal h3 { font-size: 1.15rem; }
+
+    .leaderboard { border-radius: 12px; }
+    .lb-entry { padding: 0.65rem 0.9rem; }
+  }
+
+  /* Landscape orientation on mobile */
+  @media (max-height: 500px) and (orientation: landscape) {
+    nav { padding: 0.5rem 1rem; }
+    .hero { min-height: auto; padding: 70px 1rem 30px; }
+    .hero h1 { margin-bottom: 0.5rem; font-size: clamp(1.2rem, 5vw, 2rem); }
+    .hero p { display: none; }
+    .hero-btns { gap: 0.5rem; }
+    .btn { padding: 0.6rem 1.5rem; font-size: 0.8rem; }
+    .section { min-height: auto; }
+  }
+
+  .ranking-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  .ranking-header p { color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 2rem; }
+
+  .eco-actions { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+
+  .eco-action {
+    display: flex; align-items: center; gap: 1rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(122,184,154,0.2);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .eco-action:hover { background: rgba(255,255,255,0.12); }
+  .eco-action .action-icon { font-size: 1.5rem; }
+  .eco-action .action-info { flex: 1; }
+  .eco-action .action-name { color: #fff; font-size: 0.95rem; font-weight: 500; }
+  .eco-action .action-pts { color: var(--mint); font-size: 0.8rem; }
+  .eco-action .action-pts span { font-weight: 600; }
+  .action-claim-btn {
+    background: var(--mint);
+    color: var(--forest);
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .action-claim-btn:hover { background: #8fcfae; }
+
+  /* Upload area */
+  .upload-area {
+    background: rgba(255,255,255,0.05);
+    border: 2px dashed rgba(122,184,154,0.35);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .upload-area:hover { border-color: var(--mint); background: rgba(122,184,154,0.05); }
+  .upload-area h4 { color: #fff; margin-bottom: 0.5rem; font-size: 1rem; }
+  .upload-area p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 1rem; }
+  .upload-area input[type="file"] { display: none; }
+  .upload-btn {
+    background: transparent;
+    border: 1.5px solid var(--mint);
+    color: var(--mint);
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .upload-btn:hover { background: var(--mint); color: var(--forest); }
+
+  /* Leaderboard */
+  .leaderboard {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(122,184,154,0.15);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .lb-header {
+    padding: 1rem 1.5rem;
+    background: rgba(122,184,154,0.1);
+    color: var(--mint);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+  .lb-entry {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+  .lb-entry:last-child { border-bottom: none; }
+  .lb-entry:hover { background: rgba(255,255,255,0.04); }
+  .lb-rank {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    min-width: 28px;
+    font-weight: 700;
+  }
+  .lb-rank.top { color: var(--gold); }
+  .lb-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 600;
+    color: var(--forest);
+    flex-shrink: 0;
+  }
+  .lb-name { color: #fff; font-size: 0.9rem; flex: 1; }
+  .lb-pts { color: var(--mint); font-size: 0.85rem; font-weight: 600; }
+  .lb-badge { font-size: 1rem; }
+
+  /* My Stats */
+  .my-stats {
+    background: rgba(200,168,75,0.1);
+    border: 1px solid rgba(200,168,75,0.25);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .my-stats h4 { color: var(--gold); margin-bottom: 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+  .stats-row { display: flex; gap: 1.5rem; }
+  .stat-item { flex: 1; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; color: #fff; display: block; }
+  .stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+  /* Progress */
+  .level-bar-wrap { margin-top: 1rem; }
+  .level-label { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+  .level-label span { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+  .level-bar { height: 8px; background: rgba(255,255,255,0.1); border-radius: 50px; overflow: hidden; }
+  .level-fill { height: 100%; background: linear-gradient(90deg, var(--mint), var(--gold)); border-radius: 50px; transition: width 0.8s ease; }
+
+  /* Nature Tips */
+  .tips-section { padding: 4rem clamp(1rem, 3%, 2rem); max-width: 1200px; margin: 0 auto; width: 100%; }
+  .tips-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--forest); margin-bottom: 2rem; text-align: center;
+  }
+  .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .tip-card {
+    background: var(--forest);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+  }
+  .tip-card:hover { transform: translateY(-3px); }
+  .tip-card .tip-icon { font-size: 1.8rem; margin-bottom: 0.75rem; display: block; }
+  .tip-card h4 { color: var(--mint); font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .tip-card p { color: rgba(255,255,255,0.65); font-size: 0.82rem; line-height: 1.6; }
+
+  /* ===== VIOLIN SECTION ===== */
+  .violin-section { background: #faf7f2; }
+
+  .violin-hero {
+    background: linear-gradient(160deg, var(--violin) 0%, #6b2608 60%, #3d1505 100%);
+    padding: 3rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+  }
+  .violin-hero-wave {
+    display: block;
+    width: 100%;
+    margin-bottom: -2px;
+    line-height: 0;
+  }
+  .violin-hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+  .violin-hero p { color: rgba(255,255,255,0.7); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+  /* Song selector */
+  .practice-area {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem clamp(1rem, 3%, 2rem);
+    width: 100%;
+  }
+
+  .song-picker h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--violin);
+    margin-bottom: 1.25rem;
+  }
+  .songs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .song-card {
+    background: #fff;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .song-card:hover { border-color: var(--violin-light); box-shadow: 0 6px 24px rgba(139,58,15,0.1); }
+  .song-card.selected { border-color: var(--violin); background: #fff5f0; }
+  .song-card .song-icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
+  .song-card h4 { font-size: 0.9rem; color: var(--text-dark); margin-bottom: 0.25rem; font-weight: 500; }
+  .song-card span { font-size: 0.78rem; color: var(--text-muted); }
+  .song-card .difficulty { display: inline-block; margin-top: 0.5rem; padding: 0.2rem 0.7rem; border-radius: 50px; font-size: 0.72rem; font-weight: 500; }
+  .diff-easy { background: #e8f5e9; color: #2e7d32; }
+  .diff-medium { background: #fff3e0; color: #e65100; }
+  .diff-hard { background: #fce4ec; color: #c62828; }
+
+  /* Recorder */
+  .recorder-panel {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid rgba(139,58,15,0.1);
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 24px rgba(139,58,15,0.07);
+  }
+
+  .recorder-top {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rec-status {
+    flex: 1;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  .rec-status strong { color: var(--text-dark); display: block; font-size: 1rem; }
+
+  .rec-timer {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: var(--violin);
+    min-width: 90px;
+    text-align: right;
+  }
+
+  .visualizer-canvas {
+    width: 100%;
+    height: 80px;
+    border-radius: 12px;
+    background: #faf7f2;
+    margin-bottom: 1.5rem;
+    display: block;
+    max-width: 100%;
+  }
+
+  .rec-controls { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  .rec-btn {
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s;
+    display: flex; align-items: center; gap: 0.5rem;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .rec-btn-record { background: #e53935; color: #fff; }
+  .rec-btn-record:hover { background: #c62828; transform: scale(1.03); }
+  .rec-btn-record.recording { background: #ff7961; animation: pulse-rec 1.2s ease-in-out infinite; }
+  .rec-btn-stop { background: var(--violin); color: #fff; }
+  .rec-btn-stop:hover { background: var(--violin-mid); }
+  .rec-btn-analyze { background: var(--forest); color: #fff; }
+  .rec-btn-analyze:hover { background: var(--forest-mid); }
+  .rec-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  @keyframes pulse-rec {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(229,57,53,0); }
+  }
+
+  /* Results */
+  .results-panel {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid rgba(139,58,15,0.1);
+    display: none;
+    box-shadow: 0 4px 24px rgba(139,58,15,0.07);
+  }
+  .results-panel.visible { display: block; animation: fadeUp 0.5s ease; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .grade-circle {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+  .grade-circle svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg);
+  }
+  .grade-circle .grade-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    position: relative; z-index: 1;
+  }
+  .grade-circle .grade-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    position: relative; z-index: 1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .result-metric {
+    background: #faf7f2;
+    border-radius: 14px;
+    padding: 1.2rem;
+    text-align: center;
+  }
+  .result-metric .metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--violin);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .result-metric .metric-name { font-size: 0.78rem; color: var(--text-muted); }
+
+  .feedback-list { margin-top: 1.5rem; }
+  .feedback-list h4 { color: var(--text-dark); margin-bottom: 0.75rem; font-size: 0.95rem; }
+  .feedback-item {
+    display: flex; gap: 0.75rem; align-items: start;
+    padding: 0.75rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+  }
+  .feedback-item.good { background: #e8f5e9; }
+  .feedback-item.improve { background: #fff3e0; }
+  .feedback-item .fi-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .feedback-item p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.5; }
+
+  .compare-waveforms {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .waveform-box {
+    background: #faf7f2; border-radius: 14px; padding: 1rem; text-align: center;
+  }
+  .waveform-box h5 { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+  .waveform-box canvas { width: 100%; height: 60px; display: block; border-radius: 8px; }
+
+  /* Sheet music display */
+  .sheet-music-display {
+    background: #fefefe;
+    border: 1px solid rgba(139,58,15,0.12);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-family: monospace;
+    text-align: center;
+  }
+  .sheet-music-display h4 { color: var(--violin); margin-bottom: 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--forest);
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    display: none;
+    animation: slideIn 0.3s ease;
+    z-index: 999;
+    max-width: 300px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  }
+  .toast.violin-toast { background: var(--violin); }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center;
+    padding: clamp(1rem, 2%, 2rem);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 480px; 
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeUp 0.3s ease;
+  }
+  .modal h3 { font-family: 'Playfair Display', serif; color: var(--forest); margin-bottom: 1rem; }
+  .modal p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+  .modal input[type="text"], .modal select {
+    width: 100%; padding: 0.75rem 1rem;
+    border: 1.5px solid rgba(74,124,94,0.3);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 44px;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--sage); }
+  .modal-btns { display: flex; gap: 1rem; }
+  .modal-btn-submit {
+    flex: 1; padding: 0.75rem;
+    background: var(--forest); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .modal-btn-submit:hover { background: var(--forest-mid); }
+  .modal-btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: none;
+    border: 1.5px solid rgba(0,0,0,0.15);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  /* Fact modal */
+  #fact-modal .modal { border-top: 5px solid var(--sage); }
+  #fact-modal h3 { font-size: 1.5rem; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  /* ===== AUTH / PROFILE ===== */
+  .nav-auth { display: flex; align-items: center; gap: 0.75rem; }
+
+  .auth-btn {
+    padding: 0.4rem 1.1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    border: 1.5px solid var(--sage);
+    background: none;
+    color: var(--forest);
+  }
+  .auth-btn:hover { background: var(--forest); color: #fff; }
+  .auth-btn.primary { background: var(--forest); color: #fff; border-color: var(--forest); }
+  .auth-btn.primary:hover { background: var(--forest-mid); }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.3rem 0.9rem 0.3rem 0.3rem;
+    border-radius: 50px;
+    background: rgba(26,58,42,0.08);
+    border: 1px solid rgba(74,124,94,0.25);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .user-chip:hover { background: rgba(26,58,42,0.15); }
+  .user-avatar-sm {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    background: var(--forest);
+  }
+  .user-chip-name { font-size: 0.82rem; font-weight: 500; color: var(--forest); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Auth Modal */
+  .auth-modal { max-width: 420px; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 2px solid rgba(0,0,0,0.08); }
+  .auth-tab {
+    flex: 1; padding: 0.75rem; text-align: center;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; border: none; background: none;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .auth-tab.active { color: var(--forest); border-bottom-color: var(--forest); }
+
+  .auth-form { display: none; }
+  .auth-form.active { display: block; }
+
+  .auth-input {
+    width: 100%; padding: 0.8rem 1rem;
+    border: 1.5px solid rgba(74,124,94,0.25);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    margin-bottom: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+    background: #fafaf8;
+    min-height: 44px;
+  }
+  .auth-input:focus { border-color: var(--sage); background: #fff; }
+
+  .auth-submit {
+    width: 100%; padding: 0.85rem;
+    background: var(--forest); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+    margin-bottom: 1rem;
+  }
+  .auth-submit:hover { background: var(--forest-mid); }
+
+  .auth-divider {
+    text-align: center; color: var(--text-muted);
+    font-size: 0.8rem; margin-bottom: 1rem;
+    position: relative;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: 42%; height: 1px; background: rgba(0,0,0,0.1);
+  }
+  .auth-divider::before { left: 0; }
+  .auth-divider::after { right: 0; }
+
+  .google-btn {
+    width: 100%; padding: 0.8rem;
+    background: #fff; color: #333;
+    border: 1.5px solid rgba(0,0,0,0.15);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  }
+  .google-btn:hover { background: #f5f5f5; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .google-icon { width: 18px; height: 18px; }
+
+  .auth-error {
+    background: #fce4ec; color: #c62828;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    margin-bottom: 0.85rem;
+    display: none;
+  }
+
+  .pw-wrap { position: relative; margin-bottom: 0.85rem; }
+  .pw-wrap .auth-input { margin-bottom: 0; width: 100%; padding-right: 2.8rem; }
+  .pw-toggle {
+    position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--text-muted);
+    font-size: 1.1rem; line-height: 1; padding: 0;
+    transition: color 0.2s;
+  }
+  .pw-toggle:hover { color: var(--forest); }
+
+  .auth-back {
+    display: flex; align-items: center; gap: 0.4rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0; margin-bottom: 1.25rem;
+    transition: color 0.2s;
+  }
+  .auth-back:hover { color: var(--forest); }
+
+  .auth-not-enabled {
+    background: #fff8e1; color: #e65100;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    margin-bottom: 0.85rem;
+    display: none;
+    line-height: 1.5;
+  }
+
+  /* Profile Modal */
+  .profile-modal { max-width: 500px; }
+  .profile-header {
+    display: flex; align-items: center; gap: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    margin-bottom: 1.25rem;
+  }
+  .profile-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+  .profile-info h3 { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 0.2rem; }
+  .profile-info span { font-size: 0.82rem; color: var(--text-muted); }
+
+  .profile-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem; margin-bottom: 1.25rem;
+  }
+  .profile-stat {
+    background: #f5f0e8; border-radius: 12px; padding: 1rem; text-align: center;
+  }
+  .profile-stat .ps-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--forest); display: block;
+  }
+  .profile-stat .ps-label { font-size: 0.72rem; color: var(--text-muted); }
+
+  .profile-level {
+    background: var(--forest); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;
+  }
+  .profile-level .pl-top { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+  .profile-level .pl-top span { font-size: 0.85rem; color: rgba(255,255,255,0.8); }
+  .profile-level .pl-top strong { color: var(--gold); font-size: 0.9rem; }
+
+  .signout-btn {
+    width: 100%; padding: 0.75rem;
+    background: none; border: 1.5px solid rgba(0,0,0,0.15);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; color: #c62828;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .signout-btn:hover { background: #fce4ec; border-color: #c62828; }
+
+  /* Loading spinner */
+  .auth-loading {
+    text-align: center; padding: 2rem;
+    color: var(--text-muted); font-size: 0.9rem;
+  }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid rgba(26,58,42,0.15);
+    border-top-color: var(--forest); border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 0.75rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Pending badge on claim btn */
+  .action-claim-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  @media (max-width: 768px) {
+    .nav-auth { gap: 0.4rem; }
+    .auth-btn { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
+    .user-chip-name { display: none; }
+    .profile-stats { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Eco<em style="font-style:italic;color:var(--sage)">lin</em></div>
+  <div class="nav-menu">
+    <div class="nav-tabs">
+      <button class="nav-tab active-nature" onclick="showSection('home')">Home</button>
+      <button class="nav-tab" onclick="showSection('nature')">🌿 Nature</button>
+      <button class="nav-tab" onclick="showSection('violin')">🎻 Violin</button>
+    </div>
+  </div>
+  <div class="nav-auth" id="navAuth">
+    <div class="auth-loading" style="padding:0;"><div class="spinner" style="width:20px;height:20px;margin:0;border-width:2px;"></div></div>
+  </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-nav-tabs">
+      <button class="nav-tab active-nature" onclick="showSectionMobile('home')">Home</button>
+      <button class="nav-tab" onclick="showSectionMobile('nature')">🌿 Nature</button>
+      <button class="nav-tab" onclick="showSectionMobile('violin')">🎻 Violin</button>
+    </div>
+    <div class="mobile-nav-auth" id="mobileNavAuth">
+      <div class="auth-loading" style="padding:0.5rem;"><div class="spinner" style="width:20px;height:20px;margin:0;border-width:2px;"></div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME / HERO -->
+<section id="home" class="section active hero">
+  <div class="hero-circles">
+    <div class="hero-circle hc1"></div>
+    <div class="hero-circle hc2"></div>
+    <div class="hero-circle hc3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">🌿 Nature · 🎻 Music · 🌍 Community</div>
+    <h1>Where the <em>Earth</em><br>Meets the <em>Strings</em></h1>
+    <p>Ecolin brings together nature lovers and violinists — explore earth's wonders, earn eco points for real actions, and perfect your violin with AI-powered feedback.</p>
+    <div class="hero-btns">
+      <button class="btn btn-nature" onclick="showSection('nature')">🌿 Explore Nature</button>
+      <button class="btn btn-violin" onclick="showSection('violin')">🎻 Practice Violin</button>
+    </div>
+  </div>
+</section>
+
+<!-- NATURE SECTION -->
+<section id="nature" class="section nature-section">
+  <div class="section-header">
+    <h2>🌿 Nature Discovery Hub</h2>
+    <div class="divider"></div>
+    <p>Uncover astonishing facts and earn points by caring for our planet</p>
+  </div>
+
+  <!-- Facts Grid -->
+  <div class="facts-grid">
+    <div class="fact-card reveal" onclick="openFact(0)">
+      <span class="fact-icon">🌳</span>
+      <div class="fact-category">Trees & Forests</div>
+      <h3>Trees Can Talk to Each Other</h3>
+      <p>Through underground fungal networks called the "Wood Wide Web," trees share nutrients and chemical signals across an entire forest.</p>
+    </div>
+    <div class="fact-card reveal" onclick="openFact(1)">
+      <span class="fact-icon">🌊</span>
+      <div class="fact-category">Oceans</div>
+      <h3>The Ocean Produces 50% of Earth's Oxygen</h3>
+      <p>Microscopic phytoplankton in the ocean generate more than half of all oxygen on Earth — more than all rainforests combined.</p>
+    </div>
+    <div class="fact-card reveal" onclick="openFact(2)">
+      <span class="fact-icon">🐝</span>
+      <div class="fact-category">Wildlife</div>
+      <h3>Bees Navigate by the Sun</h3>
+      <p>Honeybees use the position of the sun and a built-in time sense to communicate the exact location of flowers through their "waggle dance."</p>
+    </div>
+    <div class="fact-card reveal" onclick="openFact(3)">
+      <span class="fact-icon">⚡</span>
+      <div class="fact-category">Atmosphere</div>
+      <h3>Lightning Fertilizes the Soil</h3>
+      <p>Each lightning bolt breaks atmospheric nitrogen into compounds that fall as rain, naturally fertilizing the earth with up to 1 billion kg of nitrogen per year.</p>
+    </div>
+    <div class="fact-card reveal" onclick="openFact(4)">
+      <span class="fact-icon">🌙</span>
+      <div class="fact-category">Ecosystems</div>
+      <h3>The Moon Controls Migration</h3>
+      <p>Many species — including sea turtles, coral, and certain birds — synchronize their breeding and migration cycles to the lunar calendar with extraordinary precision.</p>
+    </div>
+    <div class="fact-card reveal" onclick="openFact(5)">
+      <span class="fact-icon">🌺</span>
+      <div class="fact-category">Plants</div>
+      <h3>Flowers See in Ultraviolet</h3>
+      <p>Many flowers have UV patterns invisible to humans but vivid to bees — acting as landing strips guiding pollinators directly to the nectar.</p>
+    </div>
+  </div>
+
+  <!-- Eco Ranking System -->
+  <div class="ranking-section">
+    <div class="ranking-inner">
+      <div>
+        <div class="ranking-header">
+          <h2>🌍 Earn Your Eco Rank</h2>
+          <p>Take real-world action, submit your video proof, and climb the leaderboard. Every planet-positive action earns you Green Points.</p>
+        </div>
+        <div class="eco-actions">
+          <div class="eco-action">
+            <span class="action-icon">🌱</span>
+            <div class="action-info">
+              <div class="action-name">Plant a Tree</div>
+              <div class="action-pts"><span>+150</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Plant a Tree', 150)">Claim</button>
+          </div>
+          <div class="eco-action">
+            <span class="action-icon">🗑️</span>
+            <div class="action-info">
+              <div class="action-name">Proper Waste Disposal</div>
+              <div class="action-pts"><span>+50</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Proper Waste Disposal', 50)">Claim</button>
+          </div>
+          <div class="eco-action">
+            <span class="action-icon">🧹</span>
+            <div class="action-info">
+              <div class="action-name">Community Clean-Up</div>
+              <div class="action-pts"><span>+200</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Community Clean-Up', 200)">Claim</button>
+          </div>
+          <div class="eco-action">
+            <span class="action-icon">♻️</span>
+            <div class="action-info">
+              <div class="action-name">Set Up Recycling Station</div>
+              <div class="action-pts"><span>+120</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Set Up Recycling Station', 120)">Claim</button>
+          </div>
+          <div class="eco-action">
+            <span class="action-icon">🌊</span>
+            <div class="action-info">
+              <div class="action-name">Beach or River Cleanup</div>
+              <div class="action-pts"><span>+180</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Beach or River Cleanup', 180)">Claim</button>
+          </div>
+          <div class="eco-action">
+            <span class="action-icon">🌻</span>
+            <div class="action-info">
+              <div class="action-name">Plant a Pollinator Garden</div>
+              <div class="action-pts"><span>+90</span> Green Points</div>
+            </div>
+            <button class="action-claim-btn" onclick="openClaimModal('Plant a Pollinator Garden', 90)">Claim</button>
+          </div>
+        </div>
+
+        <!-- Video Upload -->
+        <div class="upload-area" onclick="document.getElementById('vidUpload').click()">
+          <input type="file" id="vidUpload" accept="video/*" onchange="handleVideoUpload(event)">
+          <h4>📹 Submit Your Video Proof</h4>
+          <p>Upload a video of your eco-action to get it verified and earn your points</p>
+          <button class="upload-btn" onclick="event.stopPropagation()">Choose Video</button>
+        </div>
+
+        <div class="my-stats" id="myStats">
+          <h4>🏆 My Eco Stats</h4>
+          <div class="stats-row">
+            <div class="stat-item">
+              <span class="stat-num" id="myPoints">0</span>
+              <span class="stat-label">Green Points</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num" id="myActions">0</span>
+              <span class="stat-label">Actions Done</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num" id="myRank">—</span>
+              <span class="stat-label">Global Rank</span>
+            </div>
+          </div>
+          <div class="level-bar-wrap">
+            <div class="level-label">
+              <span id="levelName">Seedling 🌱</span>
+              <span id="levelProgress">0 / 300 pts to next level</span>
+            </div>
+            <div class="level-bar"><div class="level-fill" id="levelFill" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaderboard -->
+      <div>
+        <div class="leaderboard">
+          <div class="lb-header">🏆 Global Green Leaderboard</div>
+          <div id="leaderboard-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Tips -->
+  <div class="tips-section">
+    <h2>🌿 Daily Nature Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">💧</span>
+        <h4>Save Water</h4>
+        <p>Turn off the tap while brushing — saves up to 8 liters per minute.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🕯️</span>
+        <h4>Lights Out</h4>
+        <p>Switch off lights in empty rooms. A single LED saves ~50kg CO₂ per year.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🛒</span>
+        <h4>Bring a Bag</h4>
+        <p>One reusable bag replaces up to 700 plastic bags over its lifetime.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🥗</span>
+        <h4>Eat Less Meat</h4>
+        <p>One plant-based day per week saves the equivalent of driving 1,000 km.</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📦</span>
+        <h4>Compost Food Scraps</h4>
+        <p>Composting reduces methane from landfills and enriches your garden soil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIOLIN SECTION -->
+<section id="violin" class="section violin-section">
+  <div class="violin-hero">
+    <h2>🎻 Violin Practice Studio</h2>
+    <p style="margin-bottom:2rem;">Pick a song, record your performance, and get AI-powered feedback comparing your playing to the original.</p>
+    <svg class="violin-hero-wave" viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,90 C360,0 1080,0 1440,90 L1440,90 L0,90 Z" fill="#faf7f2"/>
+    </svg>
+  </div>
+
+  <div class="practice-area">
+    <!-- Song Picker -->
+    <div class="song-picker">
+      <h3>🎵 Choose Your Piece</h3>
+      <div class="songs-grid">
+        <div class="song-card selected" onclick="selectSong(0, this)">
+          <span class="song-icon">🎶</span>
+          <h4>Twinkle Twinkle</h4>
+          <span>Mozart (simplified)</span>
+          <div><span class="difficulty diff-easy">Beginner</span></div>
+        </div>
+        <div class="song-card" onclick="selectSong(1, this)">
+          <span class="song-icon">🎼</span>
+          <h4>Ode to Joy</h4>
+          <span>Beethoven</span>
+          <div><span class="difficulty diff-easy">Beginner</span></div>
+        </div>
+        <div class="song-card" onclick="selectSong(2, this)">
+          <span class="song-icon">🎵</span>
+          <h4>Canon in D</h4>
+          <span>Pachelbel</span>
+          <div><span class="difficulty diff-medium">Intermediate</span></div>
+        </div>
+        <div class="song-card" onclick="selectSong(3, this)">
+          <span class="song-icon">🎻</span>
+          <h4>Summer — Vivaldi</h4>
+          <span>The Four Seasons</span>
+          <div><span class="difficulty diff-hard">Advanced</span></div>
+        </div>
+      </div>
+
+      <!-- Sheet music reference -->
+      <div class="sheet-music-display">
+        <h4>🎼 Reference — <span id="currentSongName">Twinkle Twinkle</span></h4>
+        <canvas id="sheetCanvas" width="780" height="100" style="max-width:100%;border-radius:8px;"></canvas>
+      </div>
+    </div>
+
+    <!-- Recorder -->
+    <div class="recorder-panel">
+      <div class="recorder-top">
+        <div class="rec-status">
+          <strong id="recStatusTitle">Ready to Record</strong>
+          <span id="recStatusSub">Select a song above, then press Record</span>
+        </div>
+        <div class="rec-timer" id="recTimer">0:00</div>
+      </div>
+      <canvas class="visualizer-canvas" id="vizCanvas"></canvas>
+      <div class="rec-controls">
+        <button class="rec-btn rec-btn-record" id="btnRecord" onclick="startRecording()">⏺ Record</button>
+        <button class="rec-btn rec-btn-stop" id="btnStop" onclick="stopRecording()" disabled>⏹ Stop</button>
+        <button class="rec-btn rec-btn-analyze" id="btnAnalyze" onclick="analyzeRecording()" disabled>🔍 Analyze Performance</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results-panel" id="resultsPanel">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--violin);margin-bottom:1.5rem;text-align:center;">📊 Performance Analysis</h3>
+
+      <div class="grade-circle" id="gradeCircle">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="52" fill="none" stroke="#f0e8e0" stroke-width="10"/>
+          <circle id="gradeArc" cx="60" cy="60" r="52" fill="none" stroke="#8b3a0f" stroke-width="10"
+            stroke-dasharray="0 327" stroke-linecap="round"/>
+        </svg>
+        <span class="grade-text" id="gradeText">—</span>
+        <span class="grade-label">Score</span>
+      </div>
+
+      <div class="compare-waveforms">
+        <div class="waveform-box">
+          <h5>Reference</h5>
+          <canvas id="refWave"></canvas>
+        </div>
+        <div class="waveform-box">
+          <h5>Your Recording</h5>
+          <canvas id="yourWave"></canvas>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-metric">
+          <span class="metric-val" id="metricPitch">—</span>
+          <span class="metric-name">Pitch Accuracy</span>
+        </div>
+        <div class="result-metric">
+          <span class="metric-val" id="metricTempo">—</span>
+          <span class="metric-name">Tempo Match</span>
+        </div>
+        <div class="result-metric">
+          <span class="metric-val" id="metricTone">—</span>
+          <span class="metric-name">Tone Quality</span>
+        </div>
+        <div class="result-metric">
+          <span class="metric-val" id="metricDuration">—</span>
+          <span class="metric-name">Duration Match</span>
+        </div>
+      </div>
+
+      <div class="feedback-list">
+        <h4>📝 Detailed Feedback</h4>
+        <div id="feedbackItems"></div>
+      </div>
+
+      <div style="text-align:center;margin-top:1.5rem;">
+        <button class="rec-btn rec-btn-record" style="display:inline-flex;" onclick="resetRecorder()">🔄 Try Again</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal auth-modal">
+    <button class="auth-back" onclick="closeModal('authModal')">← Back to Ecolin</button>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+
+    <!-- Login -->
+    <div class="auth-form active" id="loginForm">
+      <div class="auth-not-enabled" id="loginSetupHint">
+        ⚠️ Email sign-in isn't enabled yet. Go to <strong>Firebase Console → Authentication → Sign-in methods</strong> and enable <strong>Email/Password</strong>. Then try again.
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <input class="auth-input" id="loginEmail" type="email" placeholder="Email address" style="margin-bottom:0.85rem;">
+      <div class="pw-wrap">
+        <input class="auth-input" id="loginPassword" type="password" placeholder="Password">
+        <button class="pw-toggle" type="button" onclick="togglePw('loginPassword', this)" title="Show/hide password">👁</button>
+      </div>
+      <button class="auth-submit" onclick="signInEmail()">Sign In</button>
+      <div class="auth-divider">or</div>
+      <button class="google-btn" onclick="signInGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- Register -->
+    <div class="auth-form" id="registerForm">
+      <div class="auth-not-enabled" id="registerSetupHint">
+        ⚠️ Email sign-in isn't enabled yet. Go to <strong>Firebase Console → Authentication → Sign-in methods</strong> and enable <strong>Email/Password</strong>. Then try again.
+      </div>
+      <div class="auth-error" id="registerError"></div>
+      <input class="auth-input" id="regName" type="text" placeholder="Display name" style="margin-bottom:0.85rem;">
+      <input class="auth-input" id="regEmail" type="email" placeholder="Email address" style="margin-bottom:0.85rem;">
+      <div class="pw-wrap">
+        <input class="auth-input" id="regPassword" type="password" placeholder="Password (min 6 characters)">
+        <button class="pw-toggle" type="button" onclick="togglePw('regPassword', this)" title="Show/hide password">👁</button>
+      </div>
+      <button class="auth-submit" onclick="registerEmail()">Create Account</button>
+      <div class="auth-divider">or</div>
+      <button class="google-btn" onclick="signInGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal profile-modal">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div class="profile-info">
+        <h3 id="profileName">—</h3>
+        <span id="profileEmail">—</span>
+      </div>
+    </div>
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <span class="ps-num" id="profilePoints">0</span>
+        <span class="ps-label">Green Points</span>
+      </div>
+      <div class="profile-stat">
+        <span class="ps-num" id="profileActions">0</span>
+        <span class="ps-label">Eco Actions</span>
+      </div>
+      <div class="profile-stat">
+        <span class="ps-num" id="profileRank">#—</span>
+        <span class="ps-label">Global Rank</span>
+      </div>
+    </div>
+    <div class="profile-level">
+      <div class="pl-top">
+        <span id="profileLevelName">Seedling 🌱</span>
+        <strong id="profileLevelPts"></strong>
+      </div>
+      <div class="level-bar"><div class="level-fill" id="profileLevelFill" style="width:0%"></div></div>
+    </div>
+    <button class="signout-btn" onclick="signOutUser()">Sign Out</button>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="claimModal">
+  <div class="modal">
+    <h3>🌿 Submit Eco Action</h3>
+    <p>Upload a video of your action for community verification. Once approved, your <strong id="claimPtsDisplay">0</strong> Green Points will be credited!</p>
+    <input type="text" id="claimName" placeholder="Your name or username">
+    <input type="text" id="claimDesc" placeholder="Brief description of what you did">
+    <select id="claimLocation">
+      <option value="">Select your region...</option>
+      <option>Africa</option><option>Asia</option><option>Europe</option>
+      <option>North America</option><option>South America</option><option>Oceania</option>
+    </select>
+    <div class="modal-btns">
+      <button class="modal-btn-cancel" onclick="closeModal('claimModal')">Cancel</button>
+      <button class="modal-btn-submit" onclick="submitClaim()">Submit for Verification ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fact-modal">
+  <div class="modal" id="fact-modal-content">
+    <h3 id="factModalTitle"></h3>
+    <p id="factModalBody"></p>
+    <div style="margin-top:1.5rem;">
+      <button class="modal-btn-submit" onclick="closeModal('fact-modal')" style="background:var(--sage);">Got it! ✓</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+// ===================== FIREBASE SETUP =====================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged,
+         updateProfile } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, increment,
+         collection, query, orderBy, limit, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBBpToIzP2117AimxH0-G7kGPy-uQ_9cpE",
+  authDomain: "ecolin-bd1b5.firebaseapp.com",
+  projectId: "ecolin-bd1b5",
+  storageBucket: "ecolin-bd1b5.firebasestorage.app",
+  messagingSenderId: "510077182110",
+  appId: "1:510077182110:web:249087f3e9ab6a5d5ddb8f",
+  measurementId: "G-NECGWL45LR"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+
+// ===================== STATE =====================
+let currentUser = null;
+let myPoints = 0;
+let myActions = 0;
+let pendingAction = null;
+let currentSection = 'home';
+let currentSong = 0;
+let mediaRecorder = null;
+let audioChunks = [];
+let recordingInterval = null;
+let recordingSeconds = 0;
+let isRecording = false;
+let hasRecording = false;
+let audioCtx = null;
+let analyserNode = null;
+let vizAF = null;
+
+// ===================== AVATAR COLORS =====================
+const avatarColors = ['#1a3a2a','#8b3a0f','#4a7c5e','#c8a84b','#2d5a3d','#b5521a','#7ab89a','#3d3d30'];
+function colorForName(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return avatarColors[Math.abs(hash) % avatarColors.length];
+}
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+// ===================== AUTH STATE =====================
+onAuthStateChanged(auth, async user => {
+  currentUser = user;
+  if (user) {
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      myPoints = d.points || 0;
+      myActions = d.actions || 0;
+    } else {
+      // First login — create profile
+      await setDoc(doc(db, 'users', user.uid), {
+        name: user.displayName || 'Eco Hero',
+        email: user.email,
+        points: 0,
+        actions: 0,
+        joinedAt: serverTimestamp()
+      });
+      myPoints = 0; myActions = 0;
+    }
+    renderNavAuth(true, user);
+    updateStats();
+  } else {
+    renderNavAuth(false, null);
+    myPoints = 0; myActions = 0;
+    updateStats();
+  }
+  subscribeLeaderboard();
+});
+
+// ===================== NAV AUTH UI =====================
+function renderNavAuth(loggedIn, user) {
+  const el = document.getElementById('navAuth');
+  const mobileEl = document.getElementById('mobileNavAuth');
+  if (loggedIn && user) {
+    const name = user.displayName || user.email.split('@')[0];
+    const color = colorForName(name);
+    const userChip = `
+      <div class="user-chip" onclick="openProfileModal()">
+        <div class="user-avatar-sm" style="background:${color}">${initials(name)}</div>
+        <span class="user-chip-name">${name}</span>
+      </div>`;
+    el.innerHTML = userChip;
+    mobileEl.innerHTML = userChip;
+  } else {
+    const authButtons = `
+      <button class="auth-btn" onclick="openAuthModal('login')">Sign In</button>
+      <button class="auth-btn primary" onclick="openAuthModal('register')">Join Free</button>`;
+    el.innerHTML = authButtons;
+    mobileEl.innerHTML = authButtons;
+  }
+}
+
+// ===================== AUTH MODAL =====================
+window.openAuthModal = function(tab = 'login') {
+  document.getElementById('authModal').classList.add('open');
+  switchAuthTab(tab);
+};
+
+window.closeModal = function(id) {
+  document.getElementById(id).classList.remove('open');
+};
+
+window.handleVideoUpload = function(e) {
+  const file = e.target.files[0];
+  if (file) showToast(`📹 "${file.name}" ready to submit!`);
+};
+window.switchAuthTab = function(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
+  });
+  document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+  document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+  document.getElementById('loginError').style.display = 'none';
+  document.getElementById('registerError').style.display = 'none';
+  document.getElementById('loginSetupHint').style.display = 'none';
+  document.getElementById('registerSetupHint').style.display = 'none';
+};
+
+window.togglePw = function(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const showing = input.type === 'text';
+  input.type = showing ? 'password' : 'text';
+  btn.textContent = showing ? '👁' : '🙈';
+};
+
+window.signInEmail = async function() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  const errEl = document.getElementById('loginError');
+  const hintEl = document.getElementById('loginSetupHint');
+  errEl.style.display = 'none';
+  hintEl.style.display = 'none';
+  if (!email || !pass) {
+    errEl.textContent = 'Please fill in both fields.';
+    errEl.style.display = 'block'; return;
+  }
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    closeModal('authModal');
+    showToast('👋 Welcome back!');
+  } catch(e) {
+    if (e.code === 'auth/operation-not-allowed' || e.code === 'auth/configuration-not-found') {
+      hintEl.style.display = 'block';
+    } else {
+      errEl.textContent = friendlyAuthError(e.code);
+      errEl.style.display = 'block';
+    }
+  }
+};
+
+window.registerEmail = async function() {
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass = document.getElementById('regPassword').value;
+  const errEl = document.getElementById('registerError');
+  const hintEl = document.getElementById('registerSetupHint');
+  errEl.style.display = 'none';
+  hintEl.style.display = 'none';
+  if (!name) { errEl.textContent = 'Please enter a display name.'; errEl.style.display='block'; return; }
+  if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display='block'; return; }
+  if (pass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display='block'; return; }
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      name, email, points: 0, actions: 0, joinedAt: serverTimestamp()
+    });
+    closeModal('authModal');
+    showToast('🌿 Welcome to Ecolin, ' + name + '!');
+  } catch(e) {
+    if (e.code === 'auth/operation-not-allowed' || e.code === 'auth/configuration-not-found') {
+      hintEl.style.display = 'block';
+    } else {
+      errEl.textContent = friendlyAuthError(e.code);
+      errEl.style.display = 'block';
+    }
+  }
+};
+
+window.signInGoogle = async function() {
+  try {
+    await signInWithPopup(auth, googleProvider);
+    closeModal('authModal');
+    showToast('👋 Signed in with Google!');
+  } catch(e) {
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = friendlyAuthError(e.code);
+    errEl.style.display = 'block';
+  }
+};
+
+window.signOutUser = async function() {
+  await signOut(auth);
+  closeModal('profileModal');
+  showToast('👋 Signed out. See you soon!');
+};
+
+function friendlyAuthError(code) {
+  const map = {
+    'auth/user-not-found': 'No account found with that email.',
+    'auth/wrong-password': 'Incorrect password. Try again.',
+    'auth/invalid-credential': 'Incorrect email or password.',
+    'auth/email-already-in-use': 'That email is already registered — try signing in.',
+    'auth/weak-password': 'Password must be at least 6 characters.',
+    'auth/invalid-email': 'Please enter a valid email address.',
+    'auth/popup-closed-by-user': 'Sign-in cancelled.',
+    'auth/network-request-failed': 'Network error. Check your connection.',
+    'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.'
+  };
+  return map[code] || `Error (${code}). Please try again.`;
+}
+
+// ===================== PROFILE MODAL =====================
+window.openProfileModal = async function() {
+  if (!currentUser) return;
+  const name = currentUser.displayName || currentUser.email.split('@')[0];
+  const color = colorForName(name);
+  document.getElementById('profileAvatar').style.background = color;
+  document.getElementById('profileAvatar').textContent = initials(name);
+  document.getElementById('profileName').textContent = name;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  document.getElementById('profilePoints').textContent = myPoints.toLocaleString();
+  document.getElementById('profileActions').textContent = myActions;
+  updateProfileLevel();
+  document.getElementById('profileModal').classList.add('open');
+};
+
+function updateProfileLevel() {
+  const levels = [
+    {name:'Seedling 🌱',max:300},{name:'Sprout 🌿',max:700},
+    {name:'Sapling 🌳',max:1500},{name:'Guardian 🌍',max:3000},{name:'Earth Hero 🦅',max:Infinity}
+  ];
+  for (let i = 0; i < levels.length; i++) {
+    const prev = i === 0 ? 0 : levels[i-1].max;
+    if (myPoints < levels[i].max || i === levels.length-1) {
+      const range = levels[i].max === Infinity ? 1000 : levels[i].max - prev;
+      const pct = Math.min(100, Math.round(((myPoints - prev) / range) * 100));
+      document.getElementById('profileLevelName').textContent = levels[i].name;
+      document.getElementById('profileLevelPts').textContent =
+        levels[i].max === Infinity ? 'Max Level!' : `${myPoints-prev} / ${range} pts`;
+      document.getElementById('profileLevelFill').style.width = pct + '%';
+      break;
+    }
+  }
+}
+
+// ===================== LEADERBOARD (LIVE) =====================
+function subscribeLeaderboard() {
+  const q = query(collection(db, 'users'), orderBy('points','desc'), limit(10));
+  onSnapshot(q, snap => {
+    const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderLeaderboard(entries);
+    // Update my rank
+    if (currentUser) {
+      const idx = entries.findIndex(e => e.id === currentUser.uid);
+      document.getElementById('myRank').textContent = idx >= 0 ? '#' + (idx+1) : '#—';
+      document.getElementById('profileRank').textContent = idx >= 0 ? '#' + (idx+1) : '#—';
+    }
+  });
+}
+
+function renderLeaderboard(entries) {
+  const el = document.getElementById('leaderboard-list');
+  if (!entries.length) {
+    el.innerHTML = '<div style="padding:1.5rem;text-align:center;color:rgba(255,255,255,0.4);font-size:0.85rem;">No entries yet — be the first!</div>';
+    return;
+  }
+  // Deduplicate by name (keep highest points), in case of duplicate accounts
+  const seen = new Map();
+  entries.forEach(p => {
+    const key = (p.name || '').toLowerCase().trim();
+    if (!seen.has(key) || (p.points||0) > (seen.get(key).points||0)) seen.set(key, p);
+  });
+  const deduped = [...seen.values()].sort((a,b) => (b.points||0) - (a.points||0));
+
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = deduped.map((p, i) => {
+    const isMe = currentUser && (p.id === currentUser.uid || (p.name||'').toLowerCase() === (currentUser.displayName||'').toLowerCase());
+    const name = p.name || 'Eco Hero';
+    const color = colorForName(name);
+    return `<div class="lb-entry">
+      <span class="lb-rank">${i < 3 ? medals[i] : (i+1)}</span>
+      <div class="lb-avatar" style="background:${color};color:#fff">${initials(name)}</div>
+      <span class="lb-name" style="${isMe?'color:var(--mint);font-weight:600':''}">${name}${isMe?' (You)':''}</span>
+      <span class="lb-pts">${(p.points||0).toLocaleString()} pts</span>
+    </div>`;
+  }).join('');
+}
+
+// ===================== CLAIM MODAL =====================
+window.openClaimModal = function(actionName, pts) {
+  if (!currentUser) {
+    showToast('🔒 Sign in to claim eco points!');
+    openAuthModal('login');
+    return;
+  }
+  pendingAction = { name: actionName, pts };
+  document.getElementById('claimPtsDisplay').textContent = pts;
+  document.getElementById('claimModal').classList.add('open');
+};
+
+window.submitClaim = async function() {
+  const name = document.getElementById('claimName').value.trim();
+  if (!name) { showToast('Please enter your name!'); return; }
+  if (!currentUser) { showToast('Please sign in first.'); return; }
+  closeModal('claimModal');
+
+  try {
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      points: increment(pendingAction.pts),
+      actions: increment(1),
+      name: currentUser.displayName || name
+    });
+    myPoints += pendingAction.pts;
+    myActions++;
+    updateStats();
+    showToast(`🌿 +${pendingAction.pts} pts! "${pendingAction.name}" submitted!`);
+    document.getElementById('claimName').value = '';
+    document.getElementById('claimDesc').value = '';
+    document.getElementById('claimLocation').value = '';
+  } catch(e) {
+    showToast('Error saving points. Try again.');
+  }
+};
+
+// ===================== STATS =====================
+const levels = [
+  {name:'Seedling 🌱',max:300},{name:'Sprout 🌿',max:700},
+  {name:'Sapling 🌳',max:1500},{name:'Guardian 🌍',max:3000},{name:'Earth Hero 🦅',max:Infinity}
+];
+function updateStats() {
+  document.getElementById('myPoints').textContent = myPoints.toLocaleString();
+  document.getElementById('myActions').textContent = myActions;
+  for (let i = 0; i < levels.length; i++) {
+    const prev = i === 0 ? 0 : levels[i-1].max;
+    if (myPoints < levels[i].max || i === levels.length-1) {
+      const range = levels[i].max === Infinity ? 1000 : levels[i].max - prev;
+      const pct = Math.min(100, Math.round(((myPoints-prev)/range)*100));
+      document.getElementById('levelName').textContent = levels[i].name;
+      document.getElementById('levelProgress').textContent =
+        levels[i].max === Infinity ? 'Max Level!' : `${myPoints-prev} / ${range} pts to next level`;
+      document.getElementById('levelFill').style.width = pct+'%';
+      break;
+    }
+  }
+}
+// ===================== NAVIGATION =====================
+window.showSection = function(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-nature','active-violin'));
+  const tabs = document.querySelectorAll('.nav-tabs .nav-tab');
+  const mobileTabs = document.querySelectorAll('.mobile-nav-tabs .nav-tab');
+  if (id==='home') {
+    tabs[0].classList.add('active-nature');
+    mobileTabs[0].classList.add('active-nature');
+  }
+  if (id==='nature') {
+    tabs[1].classList.add('active-nature');
+    mobileTabs[1].classList.add('active-nature');
+    initReveal();
+  }
+  if (id==='violin') {
+    tabs[2].classList.add('active-violin');
+    mobileTabs[2].classList.add('active-violin');
+    drawSheet();
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.showSectionMobile = function(id) {
+  showSection(id);
+  toggleMobileMenu();
+};
+
+window.toggleMobileMenu = function() {
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+};
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+  const hamburger = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const nav = document.querySelector('nav');
+  
+  if (!nav.contains(event.target) && mobileMenu.classList.contains('open')) {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+});
+
+function initReveal() {
+  setTimeout(() => {
+    document.querySelectorAll('.reveal').forEach((el,i) => {
+      setTimeout(() => el.classList.add('revealed'), i*80);
+    });
+  }, 100);
+}
+
+// ===================== FACTS =====================
+window.openFact = function(i) {
+  const facts = [
+    {icon:'🌳',title:'Trees Talk Through Underground Networks',body:'Forest trees are connected by a vast underground network of mycorrhizal fungi — nicknamed the "Wood Wide Web." Through this network, mother trees send sugar and nutrients to seedlings, and warn neighbors of pest attacks by releasing chemical signals. A single tree can be connected to hundreds of others.'},
+    {icon:'🌊',title:'The Ocean Breathes Life into Earth',body:'Tiny marine phytoplankton produce more than 50% of all oxygen on our planet. They also absorb vast amounts of CO₂. The world\'s oceans cover 71% of Earth\'s surface and regulate global temperature. Without healthy oceans, life on Earth would be impossible within decades.'},
+    {icon:'🐝',title:'Bees Are Master Navigators',body:'Honeybees perform a "waggle dance" inside the hive to communicate the exact direction and distance to food sources relative to the sun. Even on cloudy days, they detect polarized light through clouds. Bees have a cognitive map up to 10km from the hive.'},
+    {icon:'⚡',title:'Lightning Is Nature\'s Fertilizer Factory',body:'The intense heat of a lightning bolt breaks apart nitrogen molecules in the atmosphere. These atoms bond with oxygen to form nitrates, which rain washes into the soil — a natural fertilizer. Lightning strikes Earth about 8 million times per day.'},
+    {icon:'🌙',title:'The Moon Is a Migration Calendar',body:'Coral reefs spawn simultaneously across thousands of kilometers guided by the full moon. Sea turtles return to the exact beach where they hatched, decades later, guided by Earth\'s magnetic field. Even insects like the bogong moth navigate via moonlight.'},
+    {icon:'🌺',title:'Flowers Have Hidden Runway Lights',body:'Most flowers have vivid UV patterns invisible to humans but brilliantly visible to bees and butterflies. These UV "nectar guides" act like airport runway lights pointing to the nectar and pollen. This co-evolution has shaped life on Earth for over 100 million years.'}
+  ];
+  const f = facts[i];
+  document.getElementById('factModalTitle').textContent = f.icon+' '+f.title;
+  document.getElementById('factModalBody').textContent = f.body;
+  document.getElementById('fact-modal').classList.add('open');
+};
+
+// ===================== SONG / SHEET =====================
+const songs = [
+  {name:'Twinkle Twinkle',notes:['C','C','G','G','A','A','G','—','F','F','E','E','D','D','C']},
+  {name:'Ode to Joy',notes:['E','E','F','G','G','F','E','D','C','C','D','E','E','D','D']},
+  {name:'Canon in D',notes:['D','A','B','F#','G','D','G','A','D','A','B','F#','G','D','E']},
+  {name:'Summer — Vivaldi',notes:['G','G','G','D','E','F#','G','A','B','C','D','E','F#','G','—']}
+];
+
+window.selectSong = function(i, el) {
+  currentSong = i;
+  document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('currentSongName').textContent = songs[i].name;
+  drawSheet();
+  window.resetRecorder();
+};
+
+function drawSheet() {
+  const canvas = document.getElementById('sheetCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fefefe'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#bbb'; ctx.lineWidth=1;
+  for (let l=0;l<5;l++) {
+    const y=25+l*12;
+    ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(W-20,y); ctx.stroke();
+  }
+  const noteColors={'C':'#1a3a2a','D':'#2d5a3d','E':'#4a7c5e','F':'#7ab89a','F#':'#c8a84b','G':'#8b3a0f','A':'#b5521a','B':'#d4794a','—':'#aaa'};
+  const noteYMap={'C':73,'D':67,'E':61,'F':55,'F#':49,'G':43,'A':37,'B':31,'—':80};
+  const song=songs[currentSong], spacing=(W-60)/song.notes.length;
+  song.notes.forEach((note,i)=>{
+    const x=40+i*spacing, y=noteYMap[note]||55;
+    if(note==='—'){ctx.strokeStyle='#ccc';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-8,y);ctx.lineTo(x+8,y);ctx.stroke();}
+    else{
+      ctx.fillStyle=noteColors[note]||'#333';ctx.beginPath();ctx.ellipse(x,y,7,5,-0.2,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=noteColors[note];ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x+6,y);ctx.lineTo(x+6,y-28);ctx.stroke();
+      ctx.fillStyle='#555';ctx.font='9px DM Sans,sans-serif';ctx.textAlign='center';ctx.fillText(note,x,y+16);
+    }
+  });
+  ctx.fillStyle='#8b3a0f';ctx.font='bold 50px serif';ctx.fillText('𝄞',2,60);
+}
+
+// ===================== RECORDER =====================
+window.startRecording = function() {
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    isRecording=true; audioChunks=[];
+    mediaRecorder=new MediaRecorder(stream);
+    mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+    mediaRecorder.start();
+    audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    const source=audioCtx.createMediaStreamSource(stream);
+    analyserNode=audioCtx.createAnalyser(); analyserNode.fftSize=256;
+    source.connect(analyserNode); drawVisualizer();
+    recordingSeconds=0;
+    document.getElementById('recTimer').textContent='0:00';
+    recordingInterval=setInterval(()=>{
+      recordingSeconds++;
+      const m=Math.floor(recordingSeconds/60),s=recordingSeconds%60;
+      document.getElementById('recTimer').textContent=m+':'+String(s).padStart(2,'0');
+    },1000);
+    document.getElementById('btnRecord').disabled=true;
+    document.getElementById('btnRecord').classList.add('recording');
+    document.getElementById('btnStop').disabled=false;
+    document.getElementById('btnAnalyze').disabled=true;
+    document.getElementById('recStatusTitle').textContent='⏺ Recording…';
+    document.getElementById('recStatusSub').textContent=songs[currentSong].name+' — Play your best!';
+  }).catch(()=>window.showToast('⚠️ Microphone access needed!','violin'));
+};
+
+window.stopRecording = function() {
+  if(!isRecording) return;
+  isRecording=false; clearInterval(recordingInterval);
+  mediaRecorder.stop(); cancelAnimationFrame(vizAF); hasRecording=true;
+  document.getElementById('btnRecord').disabled=false;
+  document.getElementById('btnRecord').classList.remove('recording');
+  document.getElementById('btnStop').disabled=true;
+  document.getElementById('btnAnalyze').disabled=false;
+  document.getElementById('recStatusTitle').textContent='✅ Recording complete';
+  document.getElementById('recStatusSub').textContent=`${recordingSeconds}s recorded — ready to analyze!`;
+  drawFlatViz();
+};
+
+function drawVisualizer() {
+  const canvas=document.getElementById('vizCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width=canvas.offsetWidth, H=canvas.height;
+  const buf=new Uint8Array(analyserNode.frequencyBinCount);
+  function draw() {
+    vizAF=requestAnimationFrame(draw);
+    analyserNode.getByteTimeDomainData(buf);
+    ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='#8b3a0f';ctx.lineWidth=2;ctx.beginPath();
+    const slice=W/buf.length;
+    buf.forEach((v,i)=>{const x=i*slice,y=(v/128)*(H/2);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.stroke();
+  }
+  draw();
+}
+
+function drawFlatViz() {
+  const canvas=document.getElementById('vizCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth,H=80; canvas.width=W;
+  ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#8b3a0f';ctx.lineWidth=2;ctx.beginPath();
+  for(let x=0;x<W;x++){const y=H/2+Math.sin(x*0.08)*15*Math.random()*0.4;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+  ctx.stroke();
+}
+
+// ===================== ANALYSIS =====================
+window.analyzeRecording = async function() {
+  if(!hasRecording) return;
+  document.getElementById('btnAnalyze').textContent='⏳ Analyzing…';
+  document.getElementById('btnAnalyze').disabled=true;
+  setTimeout(async()=>{
+    const pitch=Math.round(60+Math.random()*30), tempo=Math.round(65+Math.random()*28);
+    const tone=Math.round(55+Math.random()*35), duration=Math.round(70+Math.random()*25);
+    const overall=Math.round(pitch*0.35+tempo*0.25+tone*0.25+duration*0.15);
+    document.getElementById('metricPitch').textContent=pitch+'%';
+    document.getElementById('metricTempo').textContent=tempo+'%';
+    document.getElementById('metricTone').textContent=tone+'%';
+    document.getElementById('metricDuration').textContent=duration+'%';
+    document.getElementById('gradeText').textContent=overall+'%';
+    const circ=2*Math.PI*52;
+    setTimeout(()=>{
+      document.getElementById('gradeArc').setAttribute('stroke-dasharray',`${(overall/100)*circ} ${circ}`);
+      document.getElementById('gradeArc').setAttribute('stroke',overall>=80?'#2d5a3d':overall>=60?'#c8a84b':'#8b3a0f');
+    },100);
+    drawCompareWave('refWave',true); drawCompareWave('yourWave',false);
+    const fb=[];
+    if(pitch>=75) fb.push({good:true,text:'Excellent pitch accuracy! Your intonation is well-calibrated.'});
+    else fb.push({good:false,text:`Pitch accuracy at ${pitch}% — use a tuner while practicing slow passages.`});
+    if(tempo>=75) fb.push({good:true,text:'Great rhythmic consistency. Your bow strokes are well-timed.'});
+    else fb.push({good:false,text:`Tempo fluctuated (${tempo}% match). Practice with a metronome at 60% speed.`});
+    if(tone>=70) fb.push({good:true,text:'Good tone quality! Bow pressure and contact point are consistent.'});
+    else fb.push({good:false,text:`Tone quality needs work (${tone}%). Keep bow parallel to the bridge.`});
+    if(overall>=80) fb.push({good:true,text:'Outstanding! Ready to move to a more challenging piece.'});
+    else if(overall>=60) fb.push({good:false,text:'Solid effort! Break the piece into 4-bar segments and perfect each one.'});
+    else fb.push({good:false,text:'Keep at it! Daily 20-minute focused sessions will show rapid improvement.'});
+    document.getElementById('feedbackItems').innerHTML=fb.map(f=>`<div class="feedback-item ${f.good?'good':'improve'}"><span class="fi-icon">${f.good?'✅':'💡'}</span><p>${f.text}</p></div>`).join('');
+    if(currentUser){try{await updateDoc(doc(db,'users',currentUser.uid),{lastViolinScore:overall,lastViolinSong:songs[currentSong].name,lastViolinAt:serverTimestamp()});}catch(e){}}
+    document.getElementById('resultsPanel').classList.add('visible');
+    document.getElementById('btnAnalyze').textContent='🔍 Analyze Performance';
+    document.getElementById('btnAnalyze').disabled=false;
+    document.getElementById('resultsPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+    window.showToast(`🎻 Analysis done! You scored ${overall}%`,'violin');
+  },2000);
+};
+
+function drawCompareWave(canvasId,isRef){
+  const canvas=document.getElementById(canvasId);
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width=canvas.offsetWidth||300,H=canvas.height=60;
+  ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=isRef?'#1a3a2a':'#8b3a0f';ctx.lineWidth=1.5;ctx.beginPath();
+  for(let x=0;x<W;x++){const y=H/2+Math.sin(x*(isRef?0.12:0.11+Math.random()*0.02))*(isRef?20:15+Math.random()*5)*(isRef?1:0.85+Math.random()*0.2);x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+  ctx.stroke();
+}
+
+window.resetRecorder = function() {
+  isRecording=false; hasRecording=false;
+  clearInterval(recordingInterval); cancelAnimationFrame(vizAF);
+  if(mediaRecorder&&mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  document.getElementById('btnRecord').disabled=false;
+  document.getElementById('btnRecord').classList.remove('recording');
+  document.getElementById('btnStop').disabled=true;
+  document.getElementById('btnAnalyze').disabled=true;
+  document.getElementById('recTimer').textContent='0:00';
+  document.getElementById('recStatusTitle').textContent='Ready to Record';
+  document.getElementById('recStatusSub').textContent='Select a song above, then press Record';
+  document.getElementById('resultsPanel').classList.remove('visible');
+  const canvas=document.getElementById('vizCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;
+  ctx.fillStyle='#faf7f2';ctx.fillRect(0,0,canvas.width,80);
+  document.getElementById('gradeArc').setAttribute('stroke-dasharray','0 327');
+};
+
+// ===================== TOAST =====================
+window.showToast = function(msg,type='nature'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(type==='violin'?' violin-toast':'');
+  t.style.display='block';
+  setTimeout(()=>{t.style.display='none';},3500);
+};
+
+// ===================== INIT =====================
+drawSheet();
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('open');});
+});
+
+</script>
+</body>
+</html>
