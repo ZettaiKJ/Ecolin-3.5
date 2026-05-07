@@ -43,7 +43,6 @@
     background: rgba(245,240,232,0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(74,124,94,0.2);
-    flex-wrap: wrap;
     gap: 0.5rem;
   }
 
@@ -58,7 +57,7 @@
     cursor: pointer;
     padding: 0;
     z-index: 101;
-    margin-left: auto;
+    flex-shrink: 0;
   }
   .hamburger span {
     width: 100%;
@@ -85,6 +84,7 @@
     font-size: 1.6rem;
     color: var(--forest);
     letter-spacing: -0.5px;
+    flex-shrink: 0;
   }
   .logo span { color: var(--violin); font-style: italic; }
 
@@ -113,7 +113,7 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(245,240,232,0.95);
+    background: rgba(245,240,232,0.98);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(74,124,94,0.2);
     transform: translateY(-100%);
@@ -122,6 +122,7 @@
     transition: all 0.3s ease;
     padding: 1rem 0;
     z-index: 99;
+    box-shadow: 0 8px 24px rgba(26,58,42,0.08);
   }
   .mobile-menu.open {
     transform: translateY(0);
@@ -148,27 +149,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }
-  .mobile-nav-auth .auth-btn {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    font-size: 0.85rem;
-    border-radius: 12px;
-    white-space: nowrap;
-  }
-  .mobile-nav-auth .auth-btn.primary {
-    order: 2;
-  }
-  .mobile-nav-auth .user-chip {
-    justify-content: center;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    background: rgba(74,124,94,0.08);
-    order: 1;
-  }
-  .mobile-nav-auth .user-chip-name {
-    display: block;
-    max-width: none;
   }
 
   /* SECTIONS */
@@ -355,270 +335,6 @@
     align-items: start;
     width: 100%;
   }
-  /* ===== RESPONSIVE ===== */
-  
-  /* Tablet & Medium Devices (768px and below) */
-  @media (max-width: 1024px) {
-    .facts-grid { padding: 2rem 2rem 3rem; }
-    .ranking-inner { gap: 2.5rem; }
-  }
-
-  @media (max-width: 768px) {
-    /* Nav */
-    nav { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
-    .logo { font-size: 1.2rem; }
-    .nav-tabs { gap: 0.2rem; }
-    .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-
-    /* Hero */
-    .hero { padding: 100px 1.5rem 60px; }
-    .hero h1 { font-size: clamp(1.8rem, 8vw, 3rem); line-height: 1.1; }
-    .hero p { font-size: 0.95rem; max-width: 95%; }
-    .hero-btns { flex-direction: column; align-items: center; gap: 0.75rem; }
-    .btn { width: 90%; max-width: 300px; text-align: center; padding: 0.8rem 1.8rem; }
-    .hero-badge { font-size: 0.75rem; padding: 0.35rem 1rem; }
-    .hc1 { width: 300px; height: 300px; top: -100px; right: -100px; }
-    .hc2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
-    .hc3 { display: none; }
-
-    /* Nature section header */
-    .section-header { padding: 2.5rem 1rem 1.5rem; }
-    .section-header h2 { font-size: 1.6rem; }
-    .section-header p { font-size: 0.95rem; }
-
-    /* Facts grid */
-    .facts-grid {
-      grid-template-columns: 1fr;
-      padding: 1.5rem 1rem 2rem;
-      gap: 1rem;
-    }
-    .fact-card { padding: 1.5rem; border-radius: 16px; }
-    .fact-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-    .fact-card h3 { font-size: 1rem; }
-    .fact-card p { font-size: 0.88rem; }
-
-    /* Ranking section */
-    .ranking-section { padding: 2.5rem 1rem; }
-    .ranking-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .ranking-header h2 { font-size: 1.5rem; }
-    .ranking-header p { font-size: 0.95rem; }
-    .eco-action { flex-wrap: nowrap; gap: 0.75rem; align-items: center; }
-    .eco-action .action-info { min-width: 0; flex: 1; }
-    .eco-action .action-name { font-size: 0.9rem; }
-    .eco-action .action-pts { font-size: 0.78rem; }
-    .action-claim-btn { padding: 0.4rem 0.8rem; font-size: 0.78rem; flex-shrink: 0; white-space: nowrap; }
-    .eco-action .action-icon { font-size: 1.3rem; min-width: 1.5rem; }
-
-    /* Upload */
-    .upload-area { padding: 1.25rem; border-radius: 14px; }
-    .upload-area h4 { font-size: 0.95rem; }
-    .upload-area p { font-size: 0.8rem; }
-
-    /* My stats */
-    .my-stats { padding: 1.25rem; border-radius: 14px; }
-    .my-stats h4 { font-size: 0.82rem; margin-bottom: 0.75rem; }
-    .stats-row { gap: 0.75rem; flex-wrap: wrap; }
-    .stat-item { flex: 1; min-width: 80px; }
-    .stat-num { font-size: 1.4rem; }
-    .stat-label { font-size: 0.75rem; }
-
-    /* Level label */
-    .level-label { flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem; }
-    .level-label span { font-size: 0.78rem; }
-    .level-bar { height: 6px; }
-
-    /* Leaderboard */
-    .leaderboard { border-radius: 14px; }
-    .lb-header { padding: 0.85rem 1rem; font-size: 0.78rem; }
-    .lb-entry { padding: 0.7rem 1rem; gap: 0.5rem; }
-    .lb-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
-    .lb-name { font-size: 0.8rem; }
-    .lb-pts { font-size: 0.76rem; }
-    .lb-rank { font-size: 0.95rem; min-width: 24px; }
-
-    /* Tips */
-    .tips-section { padding: 2.5rem 1rem; }
-    .tips-section h2 { font-size: 1.6rem; margin-bottom: 1.5rem; }
-    .tips-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .tip-card { padding: 1rem; border-radius: 14px; }
-    .tip-card .tip-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .tip-card h4 { font-size: 0.85rem; }
-    .tip-card p { font-size: 0.8rem; }
-
-    /* Violin hero */
-    .violin-hero { padding: 2rem 1rem 0; text-align: center; }
-    .violin-hero h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
-    .violin-hero p { font-size: 0.9rem; max-width: 100%; }
-
-    /* Practice area */
-    .practice-area { padding: 1.5rem 1rem 2rem; max-width: 100%; }
-    .song-picker h3 { font-size: 1.2rem; margin-bottom: 1rem; }
-    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-    .song-card { padding: 1rem; border-radius: 14px; }
-    .song-card .song-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
-    .song-card h4 { font-size: 0.8rem; margin-bottom: 0.2rem; }
-    .song-card span { font-size: 0.75rem; }
-    .song-card .difficulty { font-size: 0.68rem; padding: 0.15rem 0.6rem; }
-
-    /* Sheet music */
-    .sheet-music-display { padding: 1rem; border-radius: 14px; overflow-x: auto; margin-bottom: 1.5rem; }
-    .sheet-music-display h4 { font-size: 0.88rem; margin-bottom: 0.75rem; }
-    #sheetCanvas { height: 80px; }
-
-    /* Recorder */
-    .recorder-panel { padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem; }
-    .recorder-top { flex-direction: column; align-items: stretch; gap: 0.75rem; }
-    .rec-status { flex: 1; font-size: 0.85rem; }
-    .rec-status strong { font-size: 0.95rem; }
-    .rec-timer { font-size: 1.8rem; align-self: flex-end; min-width: 70px; }
-    .visualizer-canvas { height: 70px; margin-bottom: 1rem; }
-    .rec-controls { flex-direction: column; align-items: stretch; gap: 0.65rem; }
-    .rec-btn { padding: 0.75rem 1rem; font-size: 0.88rem; border-radius: 12px; }
-    .rec-btn:disabled { cursor: not-allowed; }
-
-    /* Results */
-    .results-panel { padding: 1.25rem; border-radius: 16px; }
-    .results-panel h3 { font-size: 1.2rem; }
-    .grade-circle { width: 100px; height: 100px; margin-bottom: 1rem; }
-    .grade-circle .grade-text { font-size: 1.8rem; }
-    .grade-circle .grade-label { font-size: 0.68rem; }
-    .results-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    .result-metric { padding: 1rem; border-radius: 12px; }
-    .result-metric .metric-val { font-size: 1.5rem; }
-    .result-metric .metric-name { font-size: 0.75rem; }
-    .compare-waveforms { grid-template-columns: 1fr; gap: 0.75rem; }
-    .waveform-box { padding: 0.85rem; border-radius: 12px; }
-    .waveform-box h5 { font-size: 0.75rem; margin-bottom: 0.5rem; }
-    .waveform-box canvas { height: 50px; }
-    .feedback-list { margin-top: 1rem; }
-    .feedback-list h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
-    .feedback-item { padding: 0.6rem; border-radius: 8px; margin-bottom: 0.4rem; }
-    .feedback-item p { font-size: 0.82rem; }
-
-    /* Toast */
-    .toast { right: 1rem; left: 1rem; bottom: 1rem; max-width: none; font-size: 0.88rem; }
-
-    /* Modal */
-    .modal-overlay { padding: 1rem; align-items: flex-end; }
-    .modal { border-radius: 16px; padding: 1.5rem; max-width: 95vw; }
-    .modal h3 { font-size: 1.3rem; margin-bottom: 0.9rem; }
-    .modal p { font-size: 0.9rem; margin-bottom: 1.25rem; }
-    .modal input[type="text"], .modal select { padding: 0.7rem 0.9rem; font-size: 0.88rem; margin-bottom: 0.85rem; border-radius: 8px; }
-    .modal-btns { flex-direction: column-reverse; gap: 0.75rem; }
-    .modal-btn-submit { padding: 0.75rem; font-size: 0.9rem; border-radius: 8px; }
-    .modal-btn-cancel { padding: 0.7rem 1.2rem; font-size: 0.88rem; text-align: center; }
-
-    /* Auth */
-    .nav-auth { gap: 0.4rem; }
-    .auth-btn { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
-    .user-chip-name { display: none; }
-    .user-chip { padding: 0.25rem 0.7rem 0.25rem 0.25rem; }
-    .user-avatar-sm { width: 28px; height: 28px; font-size: 0.7rem; }
-
-    /* Profile modal */
-    .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
-    .profile-stat { padding: 0.8rem; border-radius: 10px; }
-    .profile-stat .ps-num { font-size: 1.3rem; }
-    .profile-stat .ps-label { font-size: 0.7rem; }
-  }
-
-  /* Small Devices (600px to 768px) */
-  @media (min-width: 601px) and (max-width: 768px) {
-    .facts-grid { grid-template-columns: 1fr; }
-    .tips-grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  /* Mobile Phones (600px and below) */
-  @media (max-width: 600px) {
-    nav { padding: 0.65rem 0.8rem; justify-content: space-between; }
-    .logo { font-size: 1.1rem; }
-    .hamburger { display: flex; }
-    .nav-menu { display: none; }
-    .nav-auth { display: none; }
-
-    .hero { padding: 90px 1rem 50px; }
-    .hero h1 { font-size: clamp(1.5rem, 7.5vw, 2.5rem); }
-    .hero p { font-size: 0.9rem; line-height: 1.6; }
-    .hero-badge { font-size: 0.7rem; }
-    .hero-btns { gap: 0.6rem; }
-    .btn { padding: 0.75rem 1.5rem; font-size: 0.88rem; }
-
-    .section-header { padding: 2rem 0.8rem 1.2rem; }
-    .section-header h2 { font-size: 1.4rem; }
-    .section-header p { font-size: 0.9rem; }
-
-    .facts-grid { padding: 1.25rem 0.8rem 1.75rem; grid-template-columns: 1fr; }
-    .fact-card { padding: 1.25rem; }
-
-    .ranking-section { padding: 2rem 0.8rem; }
-    .eco-action { padding: 0.85rem 0.9rem; }
-    .eco-action .action-name { font-size: 0.88rem; }
-
-    .upload-area { padding: 1.1rem; margin-bottom: 1.25rem; }
-    .upload-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
-
-    .tips-grid { grid-template-columns: 1fr; gap: 0.6rem; }
-    .tip-card { padding: 0.9rem; }
-
-    .practice-area { padding: 1.25rem 0.8rem 1.75rem; }
-    .song-picker h3 { font-size: 1.1rem; }
-    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
-    .song-card { padding: 0.9rem; }
-
-    #sheetCanvas { height: 70px; }
-
-    .recorder-panel { padding: 1rem; }
-    .rec-controls { gap: 0.6rem; }
-    .rec-btn { padding: 0.7rem 0.9rem; font-size: 0.82rem; }
-
-    .profile-header { gap: 1rem; }
-    .profile-avatar { width: 56px; height: 56px; font-size: 1.3rem; }
-    .profile-info h3 { font-size: 1.1rem; }
-  }
-
-  /* Extra Small Devices (400px and below) */
-  @media (max-width: 400px) {
-    nav { padding: 0.6rem 0.7rem; justify-content: space-between; }
-    .logo { font-size: 1rem; }
-    .hamburger { display: flex; }
-    .nav-tabs { display: none; }
-    .nav-menu { display: none; }
-    .nav-auth { display: none; }
-
-    .hero h1 { font-size: clamp(1.3rem, 7vw, 2rem); line-height: 1.05; }
-    .hero p { font-size: 0.85rem; }
-    .btn { padding: 0.7rem 1.3rem; font-size: 0.82rem; width: 100%; }
-
-    .section-header h2 { font-size: 1.3rem; }
-    .facts-grid { padding: 1rem 0.7rem 1.5rem; gap: 0.75rem; }
-    .fact-card { padding: 1.1rem; }
-    .fact-card h3 { font-size: 0.95rem; }
-
-    .songs-grid { grid-template-columns: 1fr; gap: 0.65rem; }
-    .tips-grid { grid-template-columns: 1fr; }
-    .results-grid { grid-template-columns: 1fr; }
-    .compare-waveforms { grid-template-columns: 1fr; }
-
-    .grade-circle { width: 90px; height: 90px; }
-    .grade-circle .grade-text { font-size: 1.6rem; }
-
-    .modal { padding: 1.3rem; }
-    .modal h3 { font-size: 1.15rem; }
-
-    .leaderboard { border-radius: 12px; }
-    .lb-entry { padding: 0.65rem 0.9rem; }
-  }
-
-  /* Landscape orientation on mobile */
-  @media (max-height: 500px) and (orientation: landscape) {
-    nav { padding: 0.5rem 1rem; }
-    .hero { min-height: auto; padding: 70px 1rem 30px; }
-    .hero h1 { margin-bottom: 0.5rem; font-size: clamp(1.2rem, 5vw, 2rem); }
-    .hero p { display: none; }
-    .hero-btns { gap: 0.5rem; }
-    .btn { padding: 0.6rem 1.5rem; font-size: 0.8rem; }
-    .section { min-height: auto; }
-  }
 
   .ranking-header h2 {
     font-family: 'Playfair Display', serif;
@@ -719,7 +435,6 @@
     min-width: 28px;
     font-weight: 700;
   }
-  .lb-rank.top { color: var(--gold); }
   .lb-avatar {
     width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -729,7 +444,6 @@
   }
   .lb-name { color: #fff; font-size: 0.9rem; flex: 1; }
   .lb-pts { color: var(--mint); font-size: 0.85rem; font-weight: 600; }
-  .lb-badge { font-size: 1rem; }
 
   /* My Stats */
   .my-stats {
@@ -1029,7 +743,7 @@
     background: #fff;
     border-radius: 20px;
     padding: 2rem;
-    max-width: 480px; 
+    max-width: 480px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
@@ -1070,7 +784,6 @@
     cursor: pointer;
   }
 
-  /* Fact modal */
   #fact-modal .modal { border-top: 5px solid var(--sage); }
   #fact-modal h3 { font-size: 1.5rem; }
 
@@ -1113,7 +826,6 @@
     font-size: 0.75rem; font-weight: 700;
     color: #fff;
     flex-shrink: 0;
-    background: var(--forest);
   }
   .user-chip-name { font-size: 0.82rem; font-weight: 500; color: var(--forest); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -1284,14 +996,273 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Pending badge on claim btn */
   .action-claim-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+  /* Mobile user chip inside hamburger menu */
+  .mobile-user-chip {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    background: rgba(26,58,42,0.07);
+    border: 1px solid rgba(74,124,94,0.25);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: left;
+  }
+  .mobile-user-chip:hover { background: rgba(26,58,42,0.13); }
+  .mobile-user-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.82rem; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+  .mobile-user-info { display: flex; flex-direction: column; }
+  .mobile-user-name { font-size: 0.9rem; font-weight: 500; color: var(--forest); }
+  .mobile-user-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+  .mobile-auth-btn {
+    width: 100%; padding: 0.7rem 1rem;
+    border-radius: 12px; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    border: 1.5px solid var(--sage);
+    background: none; color: var(--forest);
+    min-height: 44px;
+  }
+  .mobile-auth-btn:hover { background: rgba(26,58,42,0.07); }
+  .mobile-auth-btn.primary { background: var(--forest); color: #fff; border-color: var(--forest); }
+  .mobile-auth-btn.primary:hover { background: var(--forest-mid); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1024px) {
+    .facts-grid { padding: 2rem 2rem 3rem; }
+    .ranking-inner { gap: 2.5rem; }
+  }
+
   @media (max-width: 768px) {
+    nav { padding: 0.75rem 1rem; }
+    .logo { font-size: 1.3rem; }
+    .nav-tabs { gap: 0.2rem; }
+    .nav-tab { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+
+    .hero { padding: 100px 1.5rem 60px; }
+    .hero h1 { font-size: clamp(1.8rem, 8vw, 3rem); line-height: 1.1; }
+    .hero p { font-size: 0.95rem; max-width: 95%; }
+    .hero-btns { flex-direction: column; align-items: center; gap: 0.75rem; }
+    .btn { width: 90%; max-width: 300px; text-align: center; padding: 0.8rem 1.8rem; }
+    .hero-badge { font-size: 0.75rem; padding: 0.35rem 1rem; }
+    .hc1 { width: 300px; height: 300px; top: -100px; right: -100px; }
+    .hc2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+    .hc3 { display: none; }
+
+    .section-header { padding: 2.5rem 1rem 1.5rem; }
+    .section-header h2 { font-size: 1.6rem; }
+    .section-header p { font-size: 0.95rem; }
+
+    .facts-grid { grid-template-columns: 1fr; padding: 1.5rem 1rem 2rem; gap: 1rem; }
+    .fact-card { padding: 1.5rem; border-radius: 16px; }
+    .fact-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+    .fact-card h3 { font-size: 1rem; }
+    .fact-card p { font-size: 0.88rem; }
+
+    .ranking-section { padding: 2.5rem 1rem; }
+    .ranking-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .ranking-header h2 { font-size: 1.5rem; }
+    .ranking-header p { font-size: 0.95rem; }
+    .eco-action { flex-wrap: nowrap; gap: 0.75rem; align-items: center; }
+    .eco-action .action-info { min-width: 0; flex: 1; }
+    .eco-action .action-name { font-size: 0.9rem; }
+    .eco-action .action-pts { font-size: 0.78rem; }
+    .action-claim-btn { padding: 0.4rem 0.8rem; font-size: 0.78rem; flex-shrink: 0; white-space: nowrap; }
+    .eco-action .action-icon { font-size: 1.3rem; min-width: 1.5rem; }
+
+    .upload-area { padding: 1.25rem; border-radius: 14px; }
+    .upload-area h4 { font-size: 0.95rem; }
+    .upload-area p { font-size: 0.8rem; }
+
+    .my-stats { padding: 1.25rem; border-radius: 14px; }
+    .my-stats h4 { font-size: 0.82rem; margin-bottom: 0.75rem; }
+    .stats-row { gap: 0.75rem; flex-wrap: wrap; }
+    .stat-item { flex: 1; min-width: 80px; }
+    .stat-num { font-size: 1.4rem; }
+    .stat-label { font-size: 0.75rem; }
+
+    .level-label { flex-direction: column; gap: 0.25rem; margin-bottom: 0.5rem; }
+    .level-label span { font-size: 0.78rem; }
+    .level-bar { height: 6px; }
+
+    .leaderboard { border-radius: 14px; }
+    .lb-header { padding: 0.85rem 1rem; font-size: 0.78rem; }
+    .lb-entry { padding: 0.7rem 1rem; gap: 0.5rem; }
+    .lb-avatar { width: 32px; height: 32px; font-size: 0.8rem; }
+    .lb-name { font-size: 0.8rem; }
+    .lb-pts { font-size: 0.76rem; }
+    .lb-rank { font-size: 0.95rem; min-width: 24px; }
+
+    .tips-section { padding: 2.5rem 1rem; }
+    .tips-section h2 { font-size: 1.6rem; margin-bottom: 1.5rem; }
+    .tips-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .tip-card { padding: 1rem; border-radius: 14px; }
+    .tip-card .tip-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .tip-card h4 { font-size: 0.85rem; }
+    .tip-card p { font-size: 0.8rem; }
+
+    .violin-hero { padding: 2rem 1rem 0; text-align: center; }
+    .violin-hero h2 { font-size: clamp(1.4rem, 6vw, 2rem); }
+    .violin-hero p { font-size: 0.9rem; max-width: 100%; }
+
+    .practice-area { padding: 1.5rem 1rem 2rem; max-width: 100%; }
+    .song-picker h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+    .song-card { padding: 1rem; border-radius: 14px; }
+    .song-card .song-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .song-card h4 { font-size: 0.8rem; margin-bottom: 0.2rem; }
+    .song-card span { font-size: 0.75rem; }
+    .song-card .difficulty { font-size: 0.68rem; padding: 0.15rem 0.6rem; }
+
+    .sheet-music-display { padding: 1rem; border-radius: 14px; overflow-x: auto; margin-bottom: 1.5rem; }
+    .sheet-music-display h4 { font-size: 0.88rem; margin-bottom: 0.75rem; }
+    #sheetCanvas { height: 80px; }
+
+    .recorder-panel { padding: 1.25rem; border-radius: 16px; margin-bottom: 1.5rem; }
+    .recorder-top { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+    .rec-status { flex: 1; font-size: 0.85rem; }
+    .rec-status strong { font-size: 0.95rem; }
+    .rec-timer { font-size: 1.8rem; align-self: flex-end; min-width: 70px; }
+    .visualizer-canvas { height: 70px; margin-bottom: 1rem; }
+    .rec-controls { flex-direction: column; align-items: stretch; gap: 0.65rem; }
+    .rec-btn { padding: 0.75rem 1rem; font-size: 0.88rem; border-radius: 12px; }
+
+    .results-panel { padding: 1.25rem; border-radius: 16px; }
+    .results-panel h3 { font-size: 1.2rem; }
+    .grade-circle { width: 100px; height: 100px; margin-bottom: 1rem; }
+    .grade-circle .grade-text { font-size: 1.8rem; }
+    .grade-circle .grade-label { font-size: 0.68rem; }
+    .results-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .result-metric { padding: 1rem; border-radius: 12px; }
+    .result-metric .metric-val { font-size: 1.5rem; }
+    .result-metric .metric-name { font-size: 0.75rem; }
+    .compare-waveforms { grid-template-columns: 1fr; gap: 0.75rem; }
+    .waveform-box { padding: 0.85rem; border-radius: 12px; }
+    .waveform-box h5 { font-size: 0.75rem; margin-bottom: 0.5rem; }
+    .waveform-box canvas { height: 50px; }
+    .feedback-list { margin-top: 1rem; }
+    .feedback-list h4 { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .feedback-item { padding: 0.6rem; border-radius: 8px; margin-bottom: 0.4rem; }
+    .feedback-item p { font-size: 0.82rem; }
+
+    .toast { right: 1rem; left: 1rem; bottom: 1rem; max-width: none; font-size: 0.88rem; }
+
+    .modal-overlay { padding: 1rem; align-items: flex-end; }
+    .modal { border-radius: 16px; padding: 1.5rem; max-width: 95vw; }
+    .modal h3 { font-size: 1.3rem; margin-bottom: 0.9rem; }
+    .modal p { font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .modal input[type="text"], .modal select { padding: 0.7rem 0.9rem; font-size: 0.88rem; margin-bottom: 0.85rem; border-radius: 8px; }
+    .modal-btns { flex-direction: column-reverse; gap: 0.75rem; }
+    .modal-btn-submit { padding: 0.75rem; font-size: 0.9rem; border-radius: 8px; }
+    .modal-btn-cancel { padding: 0.7rem 1.2rem; font-size: 0.88rem; text-align: center; }
+
     .nav-auth { gap: 0.4rem; }
     .auth-btn { padding: 0.35rem 0.75rem; font-size: 0.78rem; }
     .user-chip-name { display: none; }
-    .profile-stats { grid-template-columns: repeat(3,1fr); }
+    .user-chip { padding: 0.25rem 0.7rem 0.25rem 0.25rem; }
+    .user-avatar-sm { width: 28px; height: 28px; font-size: 0.7rem; }
+
+    .profile-stats { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+    .profile-stat { padding: 0.8rem; border-radius: 10px; }
+    .profile-stat .ps-num { font-size: 1.3rem; }
+    .profile-stat .ps-label { font-size: 0.7rem; }
+  }
+
+  /* ===== KEY FIX: Hide desktop nav-auth on mobile, show hamburger ===== */
+  @media (max-width: 600px) {
+    nav { padding: 0.65rem 0.8rem; }
+    .logo { font-size: 1.1rem; }
+    .hamburger { display: flex; }
+    .nav-menu { display: none; }
+    /* Hide desktop auth buttons — they live inside the hamburger menu now */
+    .nav-auth { display: none; }
+
+    .hero { padding: 90px 1rem 50px; }
+    .hero h1 { font-size: clamp(1.5rem, 7.5vw, 2.5rem); }
+    .hero p { font-size: 0.9rem; line-height: 1.6; }
+    .hero-badge { font-size: 0.7rem; }
+    .hero-btns { gap: 0.6rem; }
+    .btn { padding: 0.75rem 1.5rem; font-size: 0.88rem; }
+
+    .section-header { padding: 2rem 0.8rem 1.2rem; }
+    .section-header h2 { font-size: 1.4rem; }
+    .section-header p { font-size: 0.9rem; }
+
+    .facts-grid { padding: 1.25rem 0.8rem 1.75rem; grid-template-columns: 1fr; }
+    .fact-card { padding: 1.25rem; }
+
+    .ranking-section { padding: 2rem 0.8rem; }
+    .eco-action { padding: 0.85rem 0.9rem; }
+    .eco-action .action-name { font-size: 0.88rem; }
+
+    .upload-area { padding: 1.1rem; margin-bottom: 1.25rem; }
+    .upload-btn { padding: 0.5rem 1.2rem; font-size: 0.8rem; }
+
+    .tips-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+    .tip-card { padding: 0.9rem; }
+
+    .practice-area { padding: 1.25rem 0.8rem 1.75rem; }
+    .song-picker h3 { font-size: 1.1rem; }
+    .songs-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+    .song-card { padding: 0.9rem; }
+
+    #sheetCanvas { height: 70px; }
+    .recorder-panel { padding: 1rem; }
+    .rec-controls { gap: 0.6rem; }
+    .rec-btn { padding: 0.7rem 0.9rem; font-size: 0.82rem; }
+
+    .profile-header { gap: 1rem; }
+    .profile-avatar { width: 56px; height: 56px; font-size: 1.3rem; }
+    .profile-info h3 { font-size: 1.1rem; }
+  }
+
+  @media (max-width: 400px) {
+    nav { padding: 0.6rem 0.7rem; }
+    .logo { font-size: 1rem; }
+    .hamburger { display: flex; }
+    .nav-tabs { display: none; }
+    .nav-menu { display: none; }
+    .nav-auth { display: none; }
+
+    .hero h1 { font-size: clamp(1.3rem, 7vw, 2rem); line-height: 1.05; }
+    .hero p { font-size: 0.85rem; }
+    .btn { padding: 0.7rem 1.3rem; font-size: 0.82rem; width: 100%; }
+
+    .section-header h2 { font-size: 1.3rem; }
+    .facts-grid { padding: 1rem 0.7rem 1.5rem; gap: 0.75rem; }
+    .fact-card { padding: 1.1rem; }
+    .fact-card h3 { font-size: 0.95rem; }
+
+    .songs-grid { grid-template-columns: 1fr; gap: 0.65rem; }
+    .tips-grid { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr; }
+    .compare-waveforms { grid-template-columns: 1fr; }
+
+    .grade-circle { width: 90px; height: 90px; }
+    .grade-circle .grade-text { font-size: 1.6rem; }
+
+    .modal { padding: 1.3rem; }
+    .modal h3 { font-size: 1.15rem; }
+
+    .leaderboard { border-radius: 12px; }
+    .lb-entry { padding: 0.65rem 0.9rem; }
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    nav { padding: 0.5rem 1rem; }
+    .hero { min-height: auto; padding: 70px 1rem 30px; }
+    .hero h1 { margin-bottom: 0.5rem; font-size: clamp(1.2rem, 5vw, 2rem); }
+    .hero p { display: none; }
+    .hero-btns { gap: 0.5rem; }
+    .btn { padding: 0.6rem 1.5rem; font-size: 0.8rem; }
+    .section { min-height: auto; }
   }
 </style>
 </head>
@@ -1300,6 +1271,8 @@
 <!-- NAV -->
 <nav>
   <div class="logo">Eco<em style="font-style:italic;color:var(--sage)">lin</em></div>
+
+  <!-- Desktop: center nav tabs -->
   <div class="nav-menu">
     <div class="nav-tabs">
       <button class="nav-tab active-nature" onclick="showSection('home')">Home</button>
@@ -1307,22 +1280,29 @@
       <button class="nav-tab" onclick="showSection('violin')">🎻 Violin</button>
     </div>
   </div>
+
+  <!-- Desktop: auth buttons (hidden on mobile via CSS) -->
   <div class="nav-auth" id="navAuth">
     <div class="auth-loading" style="padding:0;"><div class="spinner" style="width:20px;height:20px;margin:0;border-width:2px;"></div></div>
   </div>
-  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()">
+
+  <!-- Mobile: hamburger only -->
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Open menu">
     <span></span>
     <span></span>
     <span></span>
   </button>
+
+  <!-- Mobile dropdown menu -->
   <div class="mobile-menu" id="mobileMenu">
     <div class="mobile-nav-tabs">
       <button class="nav-tab active-nature" onclick="showSectionMobile('home')">Home</button>
       <button class="nav-tab" onclick="showSectionMobile('nature')">🌿 Nature</button>
       <button class="nav-tab" onclick="showSectionMobile('violin')">🎻 Violin</button>
     </div>
+    <!-- Auth lives here on mobile -->
     <div class="mobile-nav-auth" id="mobileNavAuth">
-      <div class="auth-loading" style="padding:0.5rem;"><div class="spinner" style="width:20px;height:20px;margin:0;border-width:2px;"></div></div>
+      <div class="auth-loading" style="padding:0.5rem;"><div class="spinner" style="width:20px;height:20px;margin:0 auto;border-width:2px;"></div></div>
     </div>
   </div>
 </nav>
@@ -1353,7 +1333,6 @@
     <p>Uncover astonishing facts and earn points by caring for our planet</p>
   </div>
 
-  <!-- Facts Grid -->
   <div class="facts-grid">
     <div class="fact-card reveal" onclick="openFact(0)">
       <span class="fact-icon">🌳</span>
@@ -1452,7 +1431,6 @@
           </div>
         </div>
 
-        <!-- Video Upload -->
         <div class="upload-area" onclick="document.getElementById('vidUpload').click()">
           <input type="file" id="vidUpload" accept="video/*" onchange="handleVideoUpload(event)">
           <h4>📹 Submit Your Video Proof</h4>
@@ -1486,7 +1464,6 @@
         </div>
       </div>
 
-      <!-- Leaderboard -->
       <div>
         <div class="leaderboard">
           <div class="lb-header">🏆 Global Green Leaderboard</div>
@@ -1496,7 +1473,6 @@
     </div>
   </div>
 
-  <!-- Daily Tips -->
   <div class="tips-section">
     <h2>🌿 Daily Nature Tips</h2>
     <div class="tips-grid">
@@ -1540,7 +1516,6 @@
   </div>
 
   <div class="practice-area">
-    <!-- Song Picker -->
     <div class="song-picker">
       <h3>🎵 Choose Your Piece</h3>
       <div class="songs-grid">
@@ -1570,14 +1545,12 @@
         </div>
       </div>
 
-      <!-- Sheet music reference -->
       <div class="sheet-music-display">
         <h4>🎼 Reference — <span id="currentSongName">Twinkle Twinkle</span></h4>
         <canvas id="sheetCanvas" width="780" height="100" style="max-width:100%;border-radius:8px;"></canvas>
       </div>
     </div>
 
-    <!-- Recorder -->
     <div class="recorder-panel">
       <div class="recorder-top">
         <div class="rec-status">
@@ -1594,7 +1567,6 @@
       </div>
     </div>
 
-    <!-- Results -->
     <div class="results-panel" id="resultsPanel">
       <h3 style="font-family:'Playfair Display',serif;color:var(--violin);margin-bottom:1.5rem;text-align:center;">📊 Performance Analysis</h3>
 
@@ -1654,13 +1626,11 @@
 <div class="modal-overlay" id="authModal">
   <div class="modal auth-modal">
     <button class="auth-back" onclick="closeModal('authModal')">← Back to Ecolin</button>
-
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
       <button class="auth-tab" onclick="switchAuthTab('register')">Create Account</button>
     </div>
 
-    <!-- Login -->
     <div class="auth-form active" id="loginForm">
       <div class="auth-not-enabled" id="loginSetupHint">
         ⚠️ Email sign-in isn't enabled yet. Go to <strong>Firebase Console → Authentication → Sign-in methods</strong> and enable <strong>Email/Password</strong>. Then try again.
@@ -1679,7 +1649,6 @@
       </button>
     </div>
 
-    <!-- Register -->
     <div class="auth-form" id="registerForm">
       <div class="auth-not-enabled" id="registerSetupHint">
         ⚠️ Email sign-in isn't enabled yet. Go to <strong>Firebase Console → Authentication → Sign-in methods</strong> and enable <strong>Email/Password</strong>. Then try again.
@@ -1736,7 +1705,7 @@
   </div>
 </div>
 
-<!-- MODALS -->
+<!-- CLAIM MODAL -->
 <div class="modal-overlay" id="claimModal">
   <div class="modal">
     <h3>🌿 Submit Eco Action</h3>
@@ -1755,6 +1724,7 @@
   </div>
 </div>
 
+<!-- FACT MODAL -->
 <div class="modal-overlay" id="fact-modal">
   <div class="modal" id="fact-modal-content">
     <h3 id="factModalTitle"></h3>
@@ -1768,7 +1738,6 @@
 <div class="toast" id="toast"></div>
 
 <script type="module">
-// ===================== FIREBASE SETUP =====================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
          signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged,
@@ -1792,12 +1761,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ===================== STATE =====================
 let currentUser = null;
 let myPoints = 0;
 let myActions = 0;
 let pendingAction = null;
-let currentSection = 'home';
 let currentSong = 0;
 let mediaRecorder = null;
 let audioChunks = [];
@@ -1809,7 +1776,6 @@ let audioCtx = null;
 let analyserNode = null;
 let vizAF = null;
 
-// ===================== AVATAR COLORS =====================
 const avatarColors = ['#1a3a2a','#8b3a0f','#4a7c5e','#c8a84b','#2d5a3d','#b5521a','#7ab89a','#3d3d30'];
 function colorForName(name) {
   let hash = 0;
@@ -1830,7 +1796,6 @@ onAuthStateChanged(auth, async user => {
       myPoints = d.points || 0;
       myActions = d.actions || 0;
     } else {
-      // First login — create profile
       await setDoc(doc(db, 'users', user.uid), {
         name: user.displayName || 'Eco Hero',
         email: user.email,
@@ -1852,25 +1817,45 @@ onAuthStateChanged(auth, async user => {
 
 // ===================== NAV AUTH UI =====================
 function renderNavAuth(loggedIn, user) {
-  const el = document.getElementById('navAuth');
+  const desktopEl = document.getElementById('navAuth');
   const mobileEl = document.getElementById('mobileNavAuth');
+
   if (loggedIn && user) {
     const name = user.displayName || user.email.split('@')[0];
     const color = colorForName(name);
-    const userChip = `
+
+    // Desktop: compact chip (shown on desktop, hidden on mobile via CSS)
+    desktopEl.innerHTML = `
       <div class="user-chip" onclick="openProfileModal()">
         <div class="user-avatar-sm" style="background:${color}">${initials(name)}</div>
         <span class="user-chip-name">${name}</span>
       </div>`;
-    el.innerHTML = userChip;
-    mobileEl.innerHTML = userChip;
+
+    // Mobile: full chip inside hamburger menu with name + subtitle
+    mobileEl.innerHTML = `
+      <div class="mobile-user-chip" onclick="openProfileModal();closeMobileMenu()">
+        <div class="mobile-user-avatar" style="background:${color}">${initials(name)}</div>
+        <div class="mobile-user-info">
+          <span class="mobile-user-name">${name}</span>
+          <span class="mobile-user-sub">View Profile &amp; Stats</span>
+        </div>
+      </div>`;
   } else {
-    const authButtons = `
+    // Desktop: sign in / join buttons
+    desktopEl.innerHTML = `
       <button class="auth-btn" onclick="openAuthModal('login')">Sign In</button>
       <button class="auth-btn primary" onclick="openAuthModal('register')">Join Free</button>`;
-    el.innerHTML = authButtons;
-    mobileEl.innerHTML = authButtons;
+
+    // Mobile: full-width stacked buttons inside hamburger menu
+    mobileEl.innerHTML = `
+      <button class="mobile-auth-btn" onclick="openAuthModal('login')">Sign In</button>
+      <button class="mobile-auth-btn primary" onclick="openAuthModal('register')">Join Free</button>`;
   }
+}
+
+function closeMobileMenu() {
+  document.getElementById('hamburgerBtn').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
 }
 
 // ===================== AUTH MODAL =====================
@@ -1887,6 +1872,7 @@ window.handleVideoUpload = function(e) {
   const file = e.target.files[0];
   if (file) showToast(`📹 "${file.name}" ready to submit!`);
 };
+
 window.switchAuthTab = function(tab) {
   document.querySelectorAll('.auth-tab').forEach((t,i) => {
     t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register'));
@@ -1911,12 +1897,8 @@ window.signInEmail = async function() {
   const pass = document.getElementById('loginPassword').value;
   const errEl = document.getElementById('loginError');
   const hintEl = document.getElementById('loginSetupHint');
-  errEl.style.display = 'none';
-  hintEl.style.display = 'none';
-  if (!email || !pass) {
-    errEl.textContent = 'Please fill in both fields.';
-    errEl.style.display = 'block'; return;
-  }
+  errEl.style.display = 'none'; hintEl.style.display = 'none';
+  if (!email || !pass) { errEl.textContent = 'Please fill in both fields.'; errEl.style.display = 'block'; return; }
   try {
     await signInWithEmailAndPassword(auth, email, pass);
     closeModal('authModal');
@@ -1937,8 +1919,7 @@ window.registerEmail = async function() {
   const pass = document.getElementById('regPassword').value;
   const errEl = document.getElementById('registerError');
   const hintEl = document.getElementById('registerSetupHint');
-  errEl.style.display = 'none';
-  hintEl.style.display = 'none';
+  errEl.style.display = 'none'; hintEl.style.display = 'none';
   if (!name) { errEl.textContent = 'Please enter a display name.'; errEl.style.display='block'; return; }
   if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display='block'; return; }
   if (pass.length < 6) { errEl.textContent = 'Password must be at least 6 characters.'; errEl.style.display='block'; return; }
@@ -2027,13 +2008,12 @@ function updateProfileLevel() {
   }
 }
 
-// ===================== LEADERBOARD (LIVE) =====================
+// ===================== LEADERBOARD =====================
 function subscribeLeaderboard() {
   const q = query(collection(db, 'users'), orderBy('points','desc'), limit(10));
   onSnapshot(q, snap => {
     const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderLeaderboard(entries);
-    // Update my rank
     if (currentUser) {
       const idx = entries.findIndex(e => e.id === currentUser.uid);
       document.getElementById('myRank').textContent = idx >= 0 ? '#' + (idx+1) : '#—';
@@ -2048,14 +2028,12 @@ function renderLeaderboard(entries) {
     el.innerHTML = '<div style="padding:1.5rem;text-align:center;color:rgba(255,255,255,0.4);font-size:0.85rem;">No entries yet — be the first!</div>';
     return;
   }
-  // Deduplicate by name (keep highest points), in case of duplicate accounts
   const seen = new Map();
   entries.forEach(p => {
     const key = (p.name || '').toLowerCase().trim();
     if (!seen.has(key) || (p.points||0) > (seen.get(key).points||0)) seen.set(key, p);
   });
   const deduped = [...seen.values()].sort((a,b) => (b.points||0) - (a.points||0));
-
   const medals = ['🥇','🥈','🥉'];
   el.innerHTML = deduped.map((p, i) => {
     const isMe = currentUser && (p.id === currentUser.uid || (p.name||'').toLowerCase() === (currentUser.displayName||'').toLowerCase());
@@ -2070,7 +2048,7 @@ function renderLeaderboard(entries) {
   }).join('');
 }
 
-// ===================== CLAIM MODAL =====================
+// ===================== CLAIM =====================
 window.openClaimModal = function(actionName, pts) {
   if (!currentUser) {
     showToast('🔒 Sign in to claim eco points!');
@@ -2087,7 +2065,6 @@ window.submitClaim = async function() {
   if (!name) { showToast('Please enter your name!'); return; }
   if (!currentUser) { showToast('Please sign in first.'); return; }
   closeModal('claimModal');
-
   try {
     await updateDoc(doc(db, 'users', currentUser.uid), {
       points: increment(pendingAction.pts),
@@ -2127,6 +2104,7 @@ function updateStats() {
     }
   }
 }
+
 // ===================== NAVIGATION =====================
 window.showSection = function(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -2134,44 +2112,28 @@ window.showSection = function(id) {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active-nature','active-violin'));
   const tabs = document.querySelectorAll('.nav-tabs .nav-tab');
   const mobileTabs = document.querySelectorAll('.mobile-nav-tabs .nav-tab');
-  if (id==='home') {
-    tabs[0].classList.add('active-nature');
-    mobileTabs[0].classList.add('active-nature');
-  }
-  if (id==='nature') {
-    tabs[1].classList.add('active-nature');
-    mobileTabs[1].classList.add('active-nature');
-    initReveal();
-  }
-  if (id==='violin') {
-    tabs[2].classList.add('active-violin');
-    mobileTabs[2].classList.add('active-violin');
-    drawSheet();
-  }
+  if (id==='home') { tabs[0].classList.add('active-nature'); mobileTabs[0].classList.add('active-nature'); }
+  if (id==='nature') { tabs[1].classList.add('active-nature'); mobileTabs[1].classList.add('active-nature'); initReveal(); }
+  if (id==='violin') { tabs[2].classList.add('active-violin'); mobileTabs[2].classList.add('active-violin'); drawSheet(); }
   window.scrollTo({top:0,behavior:'smooth'});
 };
 
 window.showSectionMobile = function(id) {
   showSection(id);
-  toggleMobileMenu();
+  closeMobileMenu();
 };
 
 window.toggleMobileMenu = function() {
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
+  document.getElementById('hamburgerBtn').classList.toggle('open');
+  document.getElementById('mobileMenu').classList.toggle('open');
 };
 
 // Close mobile menu when clicking outside
 document.addEventListener('click', function(event) {
-  const hamburger = document.getElementById('hamburgerBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
   const nav = document.querySelector('nav');
-  
+  const mobileMenu = document.getElementById('mobileMenu');
   if (!nav.contains(event.target) && mobileMenu.classList.contains('open')) {
-    hamburger.classList.remove('open');
-    mobileMenu.classList.remove('open');
+    closeMobileMenu();
   }
 });
 
@@ -2393,7 +2355,6 @@ drawSheet();
 document.querySelectorAll('.modal-overlay').forEach(o=>{
   o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('open');});
 });
-
 </script>
 </body>
 </html>
